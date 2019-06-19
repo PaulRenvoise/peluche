@@ -1,0 +1,46 @@
+[run]
+
+# Whether or not to check for branch coverage
+branch=True
+
+# Run in parallel
+parallel=True
+
+omit=
+  # Don't check for tests themselves
+  tests/*
+  # Don't check for documentation testing
+  docs/*
+  # Can't test a setup.py
+  setup.py
+
+[report]
+
+exclude_lines=
+    # Have to re-enable the standard pragma
+    pragma: no cover
+
+    # Don't complain about missing debug-only code:
+    def __repr__
+    if self\.debug
+
+    # Don't complain if tests don't hit defensive assertion code:
+    raise AssertionError
+    raise NotImplementedError
+
+    # Don't complain if non-runnable code isn't run:
+    if 0:
+    if __name__ == .__main__.:
+
+# Show missing lines and code blocks
+show_missing=True
+
+fail_under=90
+
+precision=2
+
+skip_covered=True
+
+[html]
+
+directory=coverage/html
