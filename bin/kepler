@@ -1,0 +1,47 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import argparse
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
+
+import kepler
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(prog='kepler')
+    parser.add_argument('-v', '--version', action='version', version=kepler.__version__)
+
+    subparsers = parser.add_subparsers(title='Commands', dest='command')
+    #subparsers.required = True
+
+    run_parser = subparsers.add_parser('run')
+    run_parser.add_argument('paths', action='store', nargs='*', metavar='PATHS', type=str, default='.', help='')
+    run_parser.add_argument('--config', action='store', metavar='PATH', type=str, default='kepler.ini', help='')
+    run_parser.add_argument('--strict', action='store_true', default=False, help='')
+    run_parser.add_argument('--processes', action='store', metavar='COUNT', type=int, default=1, help='')
+
+    config_parser = subparsers.add_parser('config')
+    config_parser.add_argument('--generate', action='store_true', help='')
+
+    doc_parser = subparsers.add_parser('doc')
+    doc_parser.add_argument('--live', action='store_true', default=False, help='')
+    doc_parser.add_argument('--host', action='store', metavar='HOST', type=str, default='localhost', help='')
+    doc_parser.add_argument('--port', action='store', metavar='PORT', type=int, default=8080, help='')
+    doc_parser.add_argument('--force', action='store_true', default=True, help='')
+    doc_parser.add_argument('--output', action='store', metavar='PATH', type=str, default='docs/', help='')
+
+    args = parser.parse_args()
+
+    # If no command is given, force the usage of `run`
+    if args.command is None:
+        args = parser.parse_args(['run'])
+
+    k = kepler.Kepler(args)
+    if args.command == 'run':
+        k.run()
+    elif args.command == 'config':
+        k.config()
+    elif args.command == 'doc':
+        k.doc()
