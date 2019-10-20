@@ -2,10 +2,19 @@ from collections import defaultdict
 
 
 class Store():
+    """
+    TODO
+    """
     def __init__(self):
+        """
+        TODO
+        """
         self.storage = defaultdict(list)
 
     def dump(self):
+        """
+        TODO
+        """
         for filename, values in self.storage.items():
             for message, markup in values:
                 print(f"{filename}:{message}")
