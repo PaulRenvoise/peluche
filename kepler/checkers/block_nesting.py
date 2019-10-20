@@ -18,7 +18,7 @@ class BlockNesting(BaseChecker):
         'block-too-nested': {
             'template': "Block is too nested within the function ({!r}/{!r}).",
             'description': """
-                Having blocks too nested reduces readability,
+                Having blocks too deeply nested reduces readability,
                 and increases the difficulty to correctly test the function.
             """,
         },
