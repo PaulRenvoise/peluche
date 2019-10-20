@@ -1,9 +1,9 @@
 # Prettyprint
-devtools==0.5
-Pygments==2.4.2
+devtools
+Pygments
 
 # Documentation
-pdoc3==0.6.2
+pdoc3
 
 # Default requirements
 -r requirements-test.txt
