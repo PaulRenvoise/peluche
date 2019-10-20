@@ -2,17 +2,29 @@ import logging
 
 
 class Progress():
+    """
+    TODO
+    """
     STYLES = ('quiet', 'dot', 'filename', 'percent', 'count')
 
     def __init__(self, style='dot'):
+        """
+        TODO
+        """
         self.logger = logging.getLogger(f"{__name__}.{style}")
 
         self.print_progress = getattr(self, f"_{style}")
 
     def initialize(self):
+        """
+        TODO
+        """
         pass
 
     def monitor(self, items):
+        """
+        TODO
+        """
         length = len(items)
 
         for index, item in enumerate(items, start=1):
@@ -21,15 +33,10 @@ class Progress():
             self.print_progress(item, index, length)
 
     def finalize(self):
+        """
+        TODO
+        """
         pass
-
-    def __enter__(self):
-        self.initialize()
-
-        return self
-
-    def __exit__(self, type, value, traceback):
-        self.finalize()
 
     def _quiet(self, _item, _index, _length):
         pass
