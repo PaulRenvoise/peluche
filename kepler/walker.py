@@ -2,7 +2,13 @@ import logging
 
 
 class Walker:
+    """
+    TODO
+    """
     def __init__(self, source, checkers, config):
+        """
+        TODO
+        """
         self.source = source
         self.checkers = checkers
         self.config = config
@@ -12,6 +18,9 @@ class Walker:
         self._callback2checker_callbacks = {}
 
     def walk(self):
+        """
+        TODO
+        """
         # We need this first call to _visit_node() to emulate a "module" node.
         self._visit_node(self.source.ast)
 
