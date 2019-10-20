@@ -2,7 +2,7 @@ import logging
 import logging.config
 
 
-DEFAULT_LOGGING_DICT_CONFIG = {
+DEFAULT_LOGGING_CONFIG = {
     'version': 1,
     'disable_existing_loggers': False,
     'incremental': False,
@@ -69,7 +69,7 @@ DEFAULT_LOGGING_DICT_CONFIG = {
         'level': 'DEBUG',
     }
 }
-logging.config.dictConfig(DEFAULT_LOGGING_DICT_CONFIG)
+logging.config.dictConfig(DEFAULT_LOGGING_CONFIG)
 
 try:
     from devtools import debug
