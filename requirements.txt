@@ -1,2 +1,8 @@
 # AST Parsing
 redbaron==0.9.2
+
+# Caching
+diskcache==4.1.0
+
+# Sorting imports
+isort==4.3.21
