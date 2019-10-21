@@ -12,3 +12,9 @@ https://github.com/terrencepreilly/darglint
     'template': "Redudant usage of {!r} with `.strip()`.",
     'description': '',
 }
+
+'choice-sample': {
+    'template': "Replace call to `{!r}` by `random.choice({!r})` to make it simpler.",
+    'description': """
+    """,
+},
