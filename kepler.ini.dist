@@ -1,0 +1,142 @@
+[kepler]
+# the formatter to use to report the progress.
+formatter = dot
+# whether or not to exit at the first error encountered.
+strict = False
+# the number of processes to use when analyzing.
+processes = -1
+# the extensions/folders to take in account when searching files to analyze.
+include = .py,
+# the extensions/folders to ignore when searching files to analyze.
+exclude = .git/,
+
+[operator_spacing]
+description = Checks for correct spacing around operators.
+enabled = True
+
+[comma_spacing]
+description = Checks the compliance with spacing rules around commas.
+enabled = True
+
+[comment_spacing]
+description = Checks the compliance with spacing rules before comments.
+enabled = True
+
+[parentheses_spacing]
+description = Checks for correct spacing between parentheses.
+enabled = True
+
+[module_length]
+description = Checks the maximum length of modules.
+# the maximum length allowed.
+max = 225
+# whether or not to ignore docstrings.
+ignore-docstrings = True
+# whether or not to ignore comments.
+ignore-comments = True
+enabled = True
+
+[class_length]
+description = Checks the maximum length of classes.
+# the maximum length allowed.
+max = 200
+# whether or not to ignore docstrings.
+ignore-docstrings = True
+# whether or not to ignore comments.
+ignore-comments = True
+enabled = True
+
+[function_length]
+description = Checks the maximum length of functions.
+# the maximum length allowed.
+max = 25
+# whether or not to ignore docstrings.
+ignore-docstrings = True
+# whether or not to ignore comments.
+ignore-comments = True
+enabled = True
+
+[line_length]
+description = Checks the maximum line length.
+# the maximum length allowed.
+max = 120
+# whether or not to ignore docstrings.
+ignore-docstrings = True
+# whether or not to ignore comments.
+ignore-comments = True
+# whether or not to ignore uris.
+ignore-uris = True
+enabled = True
+
+[function_parameters_count]
+description = Checks the maximum number of parameters allowed.
+# the maximum number of parameters allowed.
+max = 5
+# whether or not to ignore keyword arguments.
+ignore-kwargs = False
+enabled = True
+
+[lambda_parameters_count]
+description = Checks the maximum number of parameters allowed.
+# the maximum number of parameters allowed.
+max = 3
+# whether or not to ignore keyword arguments.
+ignore-kwargs = False
+enabled = True
+
+[cyclomatic_complexity]
+description = Checks the maximum cyclomatic complexity of functions.
+# the maximum cyclomatic complexity.
+max = 10
+enabled = True
+
+[block_nesting]
+description = Checks the maximum nesting of code blocks.
+# the maximum nesting allowed.
+max = 3
+enabled = True
+
+[enumeration_refactoring]
+description = Checks for refactoring of non-optimized enumerations.
+enabled = True
+
+[membership_testing_refactoring]
+description = Checks for refactoring of non-optimized membership testing.
+enabled = True
+
+[class_naming]
+description = Checks the compliance of class names with the naming convention.
+# the naming style to enforce.
+style = pascal_case
+enabled = True
+
+[function_naming]
+description = Checks the compliance of function names with the naming convention.
+# the naming style to enforce.
+format = snake_case
+enabled = True
+
+[not_in_ordering]
+description = Checks for compliance with the `not in` comparison convention.
+enabled = True
+
+[class_docstring]
+description = Checks the presence of docstring for classes.
+enabled = True
+
+[function_docstring]
+description = Checks the presence of docstring for functions.
+enabled = True
+
+[function_newlines]
+description = Checks the number of newlines after functions.
+# the maximum amount of newlines after a function.
+count = 2
+enabled = True
+
+[decorator_newlines]
+description = Checks the number of newlines after decorators.
+# the maximum amount of newlines after a decorator.
+count = 1
+enabled = True
+
