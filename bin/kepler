@@ -14,16 +14,16 @@ if __name__ == '__main__':
     parser.add_argument('-v', '--version', action='version', version=kepler.__version__)
 
     subparsers = parser.add_subparsers(title='Commands', dest='command')
-    #subparsers.required = True
 
-    run_parser = subparsers.add_parser('run')
-    run_parser.add_argument('paths', action='store', nargs='*', metavar='PATHS', type=str, default='.', help='')
-    run_parser.add_argument('--config', action='store', metavar='PATH', type=str, default='kepler.ini', help='')
-    run_parser.add_argument('--strict', action='store_true', default=False, help='')
-    run_parser.add_argument('--processes', action='store', metavar='COUNT', type=int, default=1, help='')
+    analyze_parser = subparsers.add_parser('analyze')
+    analyze_parser.add_argument('paths', action='store', nargs='*', metavar='PATHS', type=str, default='.', help='')
+    analyze_parser.add_argument('--config', action='store', metavar='PATH', type=str, default='kepler.ini', help='')
+    analyze_parser.add_argument('--strict', action='store_true', default=False, help='')
+    analyze_parser.add_argument('--formatter', action='store', metavar='FORMAT', type=str, default='dot', help='')
+    analyze_parser.add_argument('--processes', action='store', metavar='COUNT', type=int, default=1, help='')
 
     config_parser = subparsers.add_parser('config')
-    config_parser.add_argument('--generate', action='store_true', help='')
+    config_parser.add_argument('--default', action='store_true', help='')
 
     doc_parser = subparsers.add_parser('doc')
     doc_parser.add_argument('--live', action='store_true', default=False, help='')
@@ -34,14 +34,9 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    # If no command is given, force the usage of `run`
     if args.command is None:
-        args = parser.parse_args(['run'])
+        args = parser.parse_args(['analyze'])
 
     k = kepler.Kepler(args)
-    if args.command == 'run':
-        k.run()
-    elif args.command == 'config':
-        k.config()
-    elif args.command == 'doc':
-        k.doc()
+    command = getattr(k, args.command)
+    command()
