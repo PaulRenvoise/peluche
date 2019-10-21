@@ -1,10 +1,9 @@
 import os
-from itertools import repeat
 import logging
 import subprocess
-import multiprocessing as mp
+import time
 
-from blinker import signal
+from configparser import ConfigParser
 
 from .__pkg__ import __version__
 from .checkers import BaseChecker
@@ -12,41 +11,120 @@ from .checkers import *  # Registers the checkers as subclasses of BaseChecker
 from .finder import Finder
 from .progress import Progress
 from .source import Source
-from .store import Store
+from .tracer import tracer
 from .walker import Walker
 
 
 class Kepler():
     """
+    TODO
     """
+    OPTIONS = {
+        'formatter': {
+            'default': 'dot',
+            'type': 'str',
+            'metavar': 'FORMATTER',
+            'help': """
+                The formatter to use to report the progress.
+            """,
+        },
+        'strict': {
+            'default': False,
+            'type': 'bool',
+            'metavar': '<Bool>',
+            'help': """
+                Whether or not to exit at the first error encountered.
+            """,
+        },
+        'processes': {
+            'default': -1,
+            'type': 'int',
+            'metavar': 'PROCESSES',
+            'help': """
+                The number of processes to use when analyzing.
+            """,
+        },
+        'include': {
+            'default': '.py,',
+            'type': 'str',
+            'metavar': 'EXTENSIONS/FOLDERS',
+            'help': """
+                The extensions/folders to take in account when searching files to analyze.
+            """,
+        },
+        'exclude': {
+            'default': '.git/,',
+            'type': 'str',
+            'metavar': 'EXTENSIONS/FOLDERS',
+            'help': """
+                The extensions/folders to ignore when searching files to analyze.
+            """,
+        },
+    }
     def __init__(self, args, reporter=None, config=None):
+        """
+        TODO
+        """
         self.args = args
 
-    def run(self):
-        logging.debug("RUN with %s\n", self.args)
+    @property
+    def version(self):
+        print(__version__)
 
-        checkers = [checker() for checker in BaseChecker.__subclasses__()]
+    def analyze(self):
+        """
+        TODO
+        """
+        with tracer(f"Analyzing with {self.args}"):
+            with tracer('Loading checkers'):
+                checkers = [checker() for checker in BaseChecker.__subclasses__()]
 
-        finder = Finder()
+            finder = Finder()
 
-        progress = Progress(style='filename')
-        progress.initialize()
+            progress = Progress(style=self.args.formatter)
+            progress.initialize()
 
-        for f in progress.monitor(finder.find_files(self.args.paths)):
-            # logging.debug(f)
-            source = Source(f)
-            # ap(source.fst)
+            for filepath in progress.monitor(finder.find_files(self.args.paths)):
+                # logging.debug(f)
 
-            walker = Walker(source, checkers, None)
-            walker.walk()
+                source = Source(filepath)
+                if source.sha1 in self._cache:
 
-        progress.finalize()
+
+                # ap(source.fst)
+
+                walker = Walker(source, checkers, None)
+                walker.walk()
+
+            progress.finalize()
 
     def config(self):
-        logging.debug("CONFIG with %s\n", self.args)
-        pass
+        """
+        Dumps the configuration of kepler and it's checkers to the .ini file
+
+        Args:
+            - None
+
+        Returns:
+            - None
+        TODO
+        """
+        with tracer(f"Dumping config with {self.args}"):
+            configuration = ConfigParser(allow_no_value=True)
+
+            configuration.read_dict(self.get_config())
+
+            for checker in BaseChecker.__subclasses__():
+                checker_config = checker().get_config()
+
+                configuration.read_dict(checker_config)
+
+            configuration.write(open('kepler.ini', 'w'))
 
     def doc(self):
+        """
+        TODO
+        """
         logging.debug("DOC with %s\n", self.args)
 
         command = ['pdoc']
@@ -63,6 +141,15 @@ class Kepler():
 
         subprocess.run(command)
 
-    @property
-    def version(self):
-        print(__version__)
+    def get_config(self):
+        configuration = dict()
+
+        configuration['kepler'] = {}
+
+        for key, value in self.OPTIONS.items():
+            if value['help'] != '':
+                configuration['kepler'][f"# {value['help'].strip()}"] = None
+
+            configuration['kepler'][key] = value['default']
+
+        return configuration
