@@ -5,17 +5,18 @@ import time
 
 from configparser import ConfigParser
 
+from flashback import timeable
+
 from .__pkg__ import __version__
 from .checkers import BaseChecker
 from .checkers import *  # Registers the checkers as subclasses of BaseChecker
 from .finder import Finder
 from .progress import Progress
 from .source import Source
-from .tracer import tracer
 from .walker import Walker
 
 
-class Kepler():
+class Kepler:
     """
     TODO
     """
@@ -71,32 +72,29 @@ class Kepler():
     def version(self):
         print(__version__)
 
+    @timeable
     def analyze(self):
         """
         TODO
         """
-        with tracer(f"Analyzing with {self.args}"):
-            with tracer('Loading checkers'):
-                checkers = [checker() for checker in BaseChecker.__subclasses__()]
+        checkers = [checker() for checker in BaseChecker.__subclasses__()]
 
-            finder = Finder()
+        finder = Finder()
 
-            progress = Progress(style=self.args.formatter)
-            progress.initialize()
+        progress = Progress(style=self.args.formatter)
+        progress.initialize()
 
-            for filepath in progress.monitor(finder.find_files(self.args.paths)):
-                # logging.debug(f)
+        for filepath in progress.monitor(finder.find_files(self.args.paths)):
+            # xp(f)
 
-                source = Source(filepath)
-                if source.sha1 in self._cache:
+            source = Source(filepath)
 
+            # xp(source.fst)
 
-                # ap(source.fst)
+            walker = Walker(source, checkers, None)
+            walker.walk()
 
-                walker = Walker(source, checkers, None)
-                walker.walk()
-
-            progress.finalize()
+        progress.finalize()
 
     def config(self):
         """

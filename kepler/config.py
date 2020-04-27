@@ -1,7 +1,7 @@
 from configparser import ConfigParser
 
 
-class Config():
+class Config:
     """
     TODO
     """

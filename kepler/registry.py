@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 
-class Registry():
+class Registry:
     """
     TODO
     """

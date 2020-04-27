@@ -1,7 +1,7 @@
 import logging
 
 
-class Progress():
+class Progress:
     """
     TODO
     """

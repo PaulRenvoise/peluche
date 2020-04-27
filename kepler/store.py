@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 
-class Store():
+class Store:
     """
     TODO
     """

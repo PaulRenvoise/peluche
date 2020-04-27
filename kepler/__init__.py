@@ -72,12 +72,12 @@ DEFAULT_LOGGING_CONFIG = {
 logging.config.dictConfig(DEFAULT_LOGGING_CONFIG)
 
 try:
-    from devtools import debug
+    from flashback.debugging import xp
 except ImportError:
-    def debug(*args, **kwargs):
+    def xp(*args, **kwargs):
         pass
 finally:
-    __builtins__['ap'] = debug
+    __builtins__['xp'] = xp
 
 from .monkey import *
 
@@ -85,4 +85,6 @@ from .__pkg__ import __version__
 from .kepler import Kepler
 
 
-__all__ = ('Kepler',)
+__all__ = (
+    'Kepler',
+)

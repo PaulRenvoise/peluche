@@ -3,13 +3,14 @@ import glob
 import logging
 from itertools import combinations
 
-from .tracer import tracer
+from flashback import timeable
 
 
-class Finder():
+class Finder:
     """
     TODO
     """
+    @timeable
     def find_files(self, paths):
         """
         Orchestrates the search, normalization, deduplication, and filtering of files from a list of paths
@@ -22,19 +23,15 @@ class Finder():
         Returns:
             - list(<str>): the list of files found
         """
-        with tracer('Finding files'):
-            paths = self._normalize_paths(paths)
+        normalized_paths = self._normalize_paths(paths)
+        cleaned_paths = self._cleanup_paths(normalized_paths)
 
-            paths = self._cleanup_paths(paths)
+        files = self._expand_paths_to_files(cleaned_paths)
+        filtered_files = self._filter_files(files)
 
-            files = self._expand_paths_to_files(paths)
+        logging.debug("  Found %i matching files!", len(filtered_files))
 
-            files = self._filter_files(files)
-
-            logging.debug("  Found %i matching files!", len(files))
-
-
-        return files
+        return filtered_files
 
     def _normalize_paths(self, paths):
         return [os.path.realpath(os.path.expanduser(os.path.expandvars(path))) for path in paths]

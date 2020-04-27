@@ -42,11 +42,13 @@ class Walker:
         try:
             for checker_callback in self._callback2checker_callbacks[callback]:
                 try:
+                    #xp(checker_callback.__name__, node.fst())
+
                     checker_callback(node)
                 except Exception as e:
-                    ap(node.absolute_bounding_box)
-                    # ap(node.fst())
-                    ap(checker_callback)
+                    xp(node.absolute_bounding_box)
+                    # xp(node.fst())
+                    xp(checker_callback)
                     logging.exception(e)
         except KeyError:
             checker_callbacks = [getattr(checker, callback) for checker in self.checkers if hasattr(checker, callback)]
