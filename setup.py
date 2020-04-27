@@ -4,6 +4,8 @@ import os
 from setuptools import setup
 from setuptools import find_packages
 
+from kepler.__pkg__ import __version__
+
 root = os.path.dirname(__file__)
 
 
@@ -47,25 +49,30 @@ readme = open(os.path.join(root, 'README.md'), 'r').read()
 
 
 setup(
+    version=__version__,
+
     name='kepler',
-    version='0.0.1',
-    packages=find_package(),
-    description='',
-    long_description=readme,
     author='Paul Renvoisé',
     author_email='renvoisepaul@gmail.com',
     url='https://github.com/PaulRenvoise/kepler',
-    install_requires=requirements,
-    setup_requires=['pytest-runner'],
-    tests_require=requirements_test,
-    extras_require=[],
-    entry_points='',
-    license='MIT',
-    test_suite='tests',
-    scripts='',
+    description='',
+    long_description=readme,
     classifiers=classifiers,
+
+    packages=find_packages(exclude=('tests', 'tests.*')),
+
+    install_requires=requirements,
+    tests_require=requirements_test,
+    python_requires='>=3.6.*',
+    setup_requires=['pytest-runner'],
+
+    test_suite='tests',
+
+    entry_points='',
+    scripts='',
     data_files=[],
     ext_modules=[],
     cmdclass={},
-    python_requires='>=3.6.*',
+
+    license='MIT',
 )
