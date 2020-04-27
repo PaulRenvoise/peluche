@@ -1,6 +1,4 @@
-# Prettyprint
-devtools
-Pygments
+flashback
 
 # Documentation
 pdoc3
