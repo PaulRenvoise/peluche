@@ -18,8 +18,6 @@ class MembershipTestingRefactoring(BaseChecker):
         super().__init__()
 
     def on_comparison(self, node):
-        # ap(node.fst())
-
         if node.value.first != 'in' and node.value.second != 'in':
             return
 

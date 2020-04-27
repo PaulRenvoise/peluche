@@ -17,8 +17,6 @@ class EnumerationRefactoring(BaseChecker):
         super().__init__()
 
     def on_for(self, node):
-        # ap(node.fst())
-
         # Checks for `for i in var`
         if node.target.type != 'atomtrailers':
             return

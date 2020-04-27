@@ -36,8 +36,6 @@ class BlockNesting(BaseChecker):
         super().__init__()
 
     def on_def(self, node):
-        # ap(node.fst())
-
         # If we're processing a nested function, we ignore it
         # because we already processed the parent function
         if getattr(node.scope, 'type', 'root') == 'def':

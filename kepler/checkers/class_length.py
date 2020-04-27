@@ -44,8 +44,6 @@ class ClassLength(BaseChecker):
         super().__init__()
 
     def on_class(self, node):
-        # ap(node.fst())
-
         length = node.absolute_length - 1
 
         if True:

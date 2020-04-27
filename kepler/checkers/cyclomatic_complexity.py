@@ -54,8 +54,6 @@ class CyclomaticComplexity(BaseChecker):
         super().__init__()
 
     def on_def(self, node):
-        # ap(node.fst())
-
         complexity = 0
 
         for single_node in node.find_all(self.NODES):

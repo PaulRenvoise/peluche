@@ -17,8 +17,6 @@ class FunctionDocstring(BaseChecker):
         super().__init__()
 
     def on_def(self, node):
-        # ap(node.fst())
-
         if getattr(node.scope, 'type', 'root') == 'def':
             return
 

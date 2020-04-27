@@ -27,7 +27,6 @@ class ColonSpacing(BaseChecker):
         super().__init__()
 
     def on_class(self, node):
-        # ap(node.fst())
         if len(node.fifth_formatting) > 0:
             self.add_error('leading-colon-whitespace', node=node, args=(':',))
 

@@ -50,7 +50,6 @@ class LineLength(BaseChecker):
         super().__init__()
 
     def on_module(self, node):
-        # ap(node.fst())
         raw = node.dumps()
 
         for index, line in enumerate(raw.split('\n'), start=1):

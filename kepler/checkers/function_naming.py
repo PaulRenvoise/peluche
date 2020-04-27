@@ -36,7 +36,5 @@ class FunctionNaming(BaseChecker):
         super().__init__()
 
     def on_def(self, node):
-        # ap(node.fst())
-
         if not re.match(self.CRE_FORMATS['snake_case'], node.name):
             self.add_error('invalid-function-name', node=node, args=(node.name, 'snake_case',))

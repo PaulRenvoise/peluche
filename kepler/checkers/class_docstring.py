@@ -17,8 +17,6 @@ class ClassDocstring(BaseChecker):
         super().__init__()
 
     def on_class(self, node):
-        # ap(node.fst())
-
         docstring = node.value.find('string')
 
         if not docstring or docstring.parent is not node:

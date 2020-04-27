@@ -13,9 +13,12 @@ from .module_length import ModuleLength
 from .class_length import ClassLength
 from .function_length import FunctionLength
 from .line_length import LineLength
+
 from .function_parameters_count import FunctionParametersCount
 from .lambda_parameters_count import LambdaParametersCount
+
 from .cyclomatic_complexity import CyclomaticComplexity
+
 from .block_nesting import BlockNesting
 
 from .enumeration_refactoring import EnumerationRefactoring
@@ -23,10 +26,14 @@ from .membership_testing_refactoring import MembershipTestingRefactoring
 
 from .class_naming import ClassNaming
 from .function_naming import FunctionNaming
+
 from .not_in_ordering import NotInOrdering
 
 from .class_docstring import ClassDocstring
 from .function_docstring import FunctionDocstring
+
+# from .function_newlines import FunctionNewlines
+from .decorator_newlines import DecoratorNewlines
 
 
 __all__ = (
@@ -50,4 +57,6 @@ __all__ = (
     'NotInOrdering',
     'ClassDocstring',
     'FunctionDocstring',
+#    'FunctionNewlines',
+    'DecoratorNewlines',
 )

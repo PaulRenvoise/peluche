@@ -29,8 +29,6 @@ class ParenthesesSpacing(BaseChecker):
         super().__init__()
 
     def on_class(self, node):
-        # ap(node.fst())
-
         if node.parenthesis:
             if node.second_formatting.space:
                 self.add_error('leading-parenthesis-whitespace', node=node.second_formatting.space, args=('(',))
@@ -40,8 +38,6 @@ class ParenthesesSpacing(BaseChecker):
                 self.add_error('leading-parenthesis-whitespace', node=node.fourth_formatting.space, args=(')',))
 
     def on_def(self, node):
-        # ap(node.fst())
-
         if node.second_formatting.space:
             self.add_error('leading-parenthesis-whitespace', node=node.second_formatting.space, args=('(',))
         if node.third_formatting.space:
@@ -50,8 +46,6 @@ class ParenthesesSpacing(BaseChecker):
             self.add_error('leading-parenthesis-whitespace', node=node.fourth_formatting.space, args=(')',))
 
     def on_call(self, node):
-        # ap(node.fst())
-
         if node.first_formatting.space:
             self.add_error('leading-parenthesis-whitespace', node=node.first_formatting.space, args=('(',))
         if node.second_formatting.space:
@@ -60,28 +54,20 @@ class ParenthesesSpacing(BaseChecker):
             self.add_error('leading-parenthesis-whitespace', node=node.third_formatting.space, args=(')',))
 
     def on_except(self, node):
-        # ap(node.fst())
-
         if node.exception is not None and not node.first_formatting.space:
             self.add_error('missing-parenthesis-whitespace', node=node.first_formatting, args=('(',))
 
     def on_print(self, node):
-        # ap(node.fst())
-
         if node.formatting.space:
             self.add_error('leading-parenthesis-whitespace', node=node.formatting.space, args=('(',))
 
     def on_associative_parenthesis(self, node):
-        # ap(node.fst())
-
         if node.second_formatting.space:
             self.add_error('trailing-parenthesis-whitespace', node=node.second_formatting.space, args=('(',))
         if node.third_formatting.space:
             self.add_error('leading-parenthesis-whitespace', node=node.third_formatting.space, args=(')',))
 
     def on_tuple(self, node):
-        # ap(node.fst())
-
         if not node.with_parenthesis:
             return
 

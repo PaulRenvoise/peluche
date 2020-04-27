@@ -36,7 +36,5 @@ class ClassNaming(BaseChecker):
         super().__init__()
 
     def on_class(self, node):
-        # ap(node.fst())
-
         if not re.match(self.CRE_FORMATS['pascal_case'], node.name):
             self.add_error('invalid-class-name', node=node, args=(node.name, 'pascal_case',))

@@ -19,8 +19,6 @@ class NotInOrdering(BaseChecker):
         super().__init__()
 
     def on_unitary_operator(self, node):
-        # ap(node.fst())
-
         if node.target.type != 'comparison':
             return
 

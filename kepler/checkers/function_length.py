@@ -44,8 +44,6 @@ class FunctionLength(BaseChecker):
         super().__init__()
 
     def on_def(self, node):
-        # ap(node.fst())
-
         length = node.absolute_length - 1  # Minus one for the function's signature
 
         if True:

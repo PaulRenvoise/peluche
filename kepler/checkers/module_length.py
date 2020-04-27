@@ -42,8 +42,6 @@ class ModuleLength(BaseChecker):
         super().__init__()
 
     def on_module(self, node):
-        # ap(node.fst())
-
         length = node.absolute_length
 
         if True:

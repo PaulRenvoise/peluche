@@ -29,8 +29,6 @@ class CommentSpacing(BaseChecker):
         super().__init__()
 
     def on_class(self, node):
-        # ap(node.fst())
-
         comment_node = node.sixth_formatting.comment
         if comment_node is None:
             return
@@ -46,8 +44,6 @@ class CommentSpacing(BaseChecker):
             self.add_error('missing-comment-whitespace', node=comment_node, args=('#',))
 
     def on_def(self, node):
-        # ap(node.fst())
-
         comment_node = node.sixth_formatting.comment
         if comment_node is None:
             return
@@ -63,8 +59,6 @@ class CommentSpacing(BaseChecker):
             self.add_error('missing-comment-whitespace', node=comment_node, args=('#',))
 
     def on_try(self, node):
-        # ap(node.fst())
-
         comment_node = node.second_formatting.comment
         if comment_node is None:
             return
@@ -80,8 +74,6 @@ class CommentSpacing(BaseChecker):
             self.add_error('missing-comment-whitespace', node=comment_node, args=('#',))
 
     def on_except(self, node):
-        # ap(node.fst())
-
         comment_node = node.fifth_formatting.comment
         if comment_node is None:
             return
@@ -97,8 +89,6 @@ class CommentSpacing(BaseChecker):
             self.add_error('missing-comment-whitespace', node=comment_node, args=('#',))
 
     def on_comment(self, node):
-        # ap(node.parent.fst())
-
         root = node.root
         if root.at(node.absolute_bounding_box.top_left.line) == node:
             return

@@ -23,6 +23,4 @@ class MinMaxRefactoring(BaseChecker):
 
     # TODO: 'Checks for refactoring of `sorted(list)[0]` or `sorted(list][-1])` by `min()` or `max()`.'
     def on_atomtrailers(self, node):
-        # ap(node.fst())
-
         pass

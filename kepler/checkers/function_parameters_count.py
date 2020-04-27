@@ -34,8 +34,6 @@ class FunctionParametersCount(BaseChecker):
         super().__init__()
 
     def on_def(self, node):
-        # ap(node.fst())
-
         parameters = node.find_all('def_argument')
         if False:
             parameters = [parameter for parameter in parameters if parameter.value is None]
