@@ -1,5 +1,7 @@
 import regex
 
+from flashback.formatting import camelize
+
 from .base import BaseChecker
 
 
@@ -23,6 +25,12 @@ class ClassNaming(BaseChecker):
                 Following a unique naming style across all the codebase helps readability.
             """,
         },
+        'mismatched-class-name': {
+            'template': "Class name {!r} does not match filename {!r}.",
+            'description': """
+                Defining one class per file which name match the filename helps organizing code.
+            """,
+        },
     }
 
     CRE_FORMATS = {
@@ -37,4 +45,7 @@ class ClassNaming(BaseChecker):
 
     def visit_ClassDef(self, node):
         if not self.CRE_FORMATS['pascal_case'].match(node.name.value):
-            self.add_error('invalid-class-name', node=node.name, args=(node.name.value, 'pascal_case',))
+            self.add_error('invalid-class-name', node=node.name, args=(node.name.value, 'pascal_case'))
+
+        if camelize(self.source.basename) != node.name.value:
+            self.add_error('mismatched-class-name', node=node.name, args=(node.name.value, self.source.filename))
