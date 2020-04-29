@@ -20,11 +20,11 @@ from .block_nesting import BlockNesting
 
 from .enumeration_refactoring import EnumerationRefactoring
 from .membership_testing_refactoring import MembershipTestingRefactoring
+from .not_in_refactoring import NotInRefactoring
 
+from .file_naming import FileNaming
 from .class_naming import ClassNaming
 from .function_naming import FunctionNaming
-
-from .not_in_refactoring import NotInRefactoring
 
 from .class_docstring import ClassDocstring
 from .function_docstring import FunctionDocstring
@@ -38,20 +38,29 @@ __all__ = (
     'CommaSpacing',
     'CommentSpacing',
     'ParenthesesSpacing',
+
     'ModuleLength',
     'ClassLength',
     'FunctionLength',
     'LineLength',
+
     'FunctionParametersCount',
     'LambdaParametersCount',
+
     'CyclomaticComplexity',
+
     'BlockNesting',
+
     'EnumerationRefactoring',
     'MembershipTestingRefactoring',
+    'NotInRefactoring',
+
+    'FileNaming',
     'ClassNaming',
     'FunctionNaming',
-    'NotInRefactoring',
+
     'ClassDocstring',
     'FunctionDocstring',
-    'DecoratorNewlines',
+
+    'DecoratorNewlines'
 )
