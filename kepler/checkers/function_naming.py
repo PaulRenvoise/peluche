@@ -37,4 +37,4 @@ class FunctionNaming(BaseChecker):
 
     def visit_FunctionDef(self, node):
         if not self.CRE_FORMATS['snake_case'].match(node.name.value):
-            self.add_error('invalid-function-name', node=node.name, args=(node.name.value, 'snake_case',))
+            self.add_error('invalid-function-name', node=node.name, args=(node.name.value, 'snake_case'))
