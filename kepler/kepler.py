@@ -87,6 +87,8 @@ class Kepler:
             source = Source(filepath)
             xp(source.filename)
             for checker in checkers:
+                checker.source = source
+
                 source.cst.visit(checker)
 
         progress.finalize()

@@ -28,6 +28,10 @@ class BaseChecker(CSTVisitor):
             },
         })
 
+        # FIXME: We should share the current file being processed
+        # some way else (maybe with something like Rails' CurrentAttribute?)
+        self.source = None
+
     @property
     def name(self):
         return self.NAME

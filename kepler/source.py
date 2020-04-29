@@ -14,7 +14,7 @@ class Source:
         """
         self.filepath = filepath
         self.filename = os.path.split(filepath)[1]
-        self.extension = os.path.splitext(self.filename)[1]
+        self.basename, self.extension = os.path.splitext(self.filename)
 
         self.raw = open(filepath, 'r').read()
         self.lines = self.raw.splitlines()
