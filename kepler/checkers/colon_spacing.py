@@ -1,23 +1,25 @@
+from libcst import LeftParen, RightParen, Colon
+
 from .base import BaseChecker
 
 
 class ColonSpacing(BaseChecker):
-    NAME = 'comma_spacing'
+    NAME = 'colon_spacing'
     DESCRIPTION = 'Checks the compliance with spacing rules around colons.'
     OPTIONS = {}
     MESSAGES = {
-        'missing-colon-whitespace': {
+        'missing-trailing-colon-whitespace': {
             'template': "Missing whitespace after {!r}.",
             'description': """
             """,
         },
-        'leading-colon-whitespace': {
-            'template': "Extraneous leading whitespace before {!r}.",
+        'extra-leading-colon-whitespace': {
+            'template': "Extraneous whitespace before {!r}.",
             'description': """
             """,
         },
-        'trailing-colon-whitespace': {
-            'template': "Extraneous trailing whitespace after {!r}.",
+        'extra-trailing-colon-whitespace': {
+            'template': "Extraneous whitespace after {!r}.",
             'description': """
             """,
         },
@@ -26,210 +28,232 @@ class ColonSpacing(BaseChecker):
     def __init__(self):
         super().__init__()
 
-    def on_class(self, node):
-        if len(node.fifth_formatting) > 0:
-            self.add_error('leading-colon-whitespace', node=node, args=(':',))
-
-        try:
-            value_node = node.value.node_list[0]
-
-            if value_node.type == 'endl':
-                if len(value_node.formatting) > 0:
-                    self.add_error('trailing-colon-whitespace', node=value_node, args=(':',))
-            else:  # We have a one-liner
-                if node.sixth_formatting.value.startswith('  '):
-                    self.add_error('trailing-colon-whitespace', node=node, args=(':',))
-                elif node.sixth_formatting.value != ' ':
-                    self.add_error('missing-colon-whitespace', node=node, args=(':',))
-        except IndexError:
-            pass
-
-    def on_def(self, node):
-        if len(node.fifth_formatting) > 0:
-            self.add_error('leading-colon-whitespace', node=node, args=(':',))
-
-        # TODO: What if it's a one-liner?
-        try:
-            node = node.value.node_list[0]
-
-            if node.type == 'endl':
-                if len(node.formatting) > 0:
-                    self.add_error('trailing-colon-whitespace', node=node, args=(':',))
-        except IndexError:
-            pass
-
-    def on_lambda(self, node):
-        if len(node.second_formatting) > 0:
-            self.add_error('leading-colon-whitespace', node=node, args=(':',))
-
-        try:
-            formatting = node.third_formatting[0]
-
-            if formatting.value.startswith('  '):
-                self.add_error('trailing-colon-whitespace', node=node, args=(':',))
-            elif formatting.value != ' ':
-                self.add_error('missing-colon-whitespace', node=node, args=(':',))
-        except IndexError:
-            self.add_error('missing-colon-whitespace', node=node, args=(':',))
-
-    def on_if(self, node):
-        if len(node.second_formatting) > 0:
-            self.add_error('leading-colon-whitespace', node=node, args=(':',))
-
-        # TODO: What if it's a one-liner?
-        try:
-            node = node.value.node_list[0]
-
-            if node.type == 'endl':
-                if len(node.formatting) > 0:
-                    self.add_error('trailing-colon-whitespace', node=node, args=(':',))
-        except IndexError:
-            pass
-
-    def on_elif(self, node):
-        if len(node.second_formatting) > 0:
-            self.add_error('leading-colon-whitespace', node=node, args=(':',))
-
-        # TODO: What if it's a one-liner?
-        try:
-            node = node.value.node_list[0]
-
-            if node.type == 'endl':
-                if len(node.formatting) > 0:
-                    self.add_error('trailing-colon-whitespace', node=node, args=(':',))
-        except IndexError:
-            pass
-
-    def on_else(self, node):
-        if len(node.first_formatting) > 0:
-            self.add_error('leading-colon-whitespace', node=node, args=(':',))
-
-        # TODO: What if it's a one-liner?
-        try:
-            node = node.value.node_list[0]
-
-            if node.type == 'endl':
-                if len(node.formatting) > 0:
-                    self.add_error('trailing-colon-whitespace', node=node, args=(':',))
-        except IndexError:
-            pass
-
-    def on_with(self, node):
-        if len(node.second_formatting) > 0:
-            self.add_error('leading-colon-whitespace', node=node, args=(':',))
-
-        # TODO: What if it's a one-liner?
-        try:
-            node = node.value.node_list[0]
-
-            if node.type == 'endl':
-                if len(node.formatting) > 0:
-                    self.add_error('trailing-colon-whitespace', node=node, args=(':',))
-        except IndexError:
-            pass
-
-    def on_try(self, node):
-        if len(node.first_formatting) > 0:
-            self.add_error('leading-colon-whitespace', node=node, args=(':',))
-
-        # TODO: What if it's a one-liner?
-        try:
-            node = node.value.node_list[0]
-
-            if node.type == 'endl':
-                if len(node.formatting) > 0:
-                    self.add_error('trailing-colon-whitespace', node=node, args=(':',))
-        except IndexError:
-            pass
-
-    def on_except(self, node):
-        if node.exception is None:
-            if len(node.first_formatting) > 0:
-                self.add_error('leading-colon-whitespace', node=node, args=(':',))
+    def visit_ClassDef(self, node):
+        # With parenthesis
+        if isinstance(node.lpar, LeftParen) and isinstance(node.rpar, RightParen):
+            leading = node.whitespace_before_colon.value
+            if leading != '':
+                self.add_error('extra-leading-colon-whitespace', node=node, args=(':',))
         else:
-            if len(node.fourth_formatting) > 0:
-                self.add_error('leading-colon-whitespace', node=node, args=(':',))
-
-        # TODO: What if it's a one-liner?
-        try:
-            node = node.value.node_list[0]
-
-            if node.type == 'endl':
-                if len(node.formatting) > 0:
-                    self.add_error('trailing-colon-whitespace', node=node, args=(':',))
-        except IndexError:
-            pass
-
-    def on_finally(self, node):
-        if len(node.first_formatting) > 0:
-            self.add_error('leading-colon-whitespace', node=node, args=(':',))
-
-        # TODO: What if it's a one-liner?
-        try:
-            node = node.value.node_list[0]
-
-            if node.type == 'endl':
-                if len(node.formatting) > 0:
-                    self.add_error('trailing-colon-whitespace', node=node, args=(':',))
-        except IndexError:
-            pass
-
-    def on_for(self, node):
-        if len(node.fourth_formatting) > 0:
-            self.add_error('leading-colon-whitespace', node=node, args=(':',))
-
-        # TODO: What if it's a one-liner?
-        try:
-            node = node.value.node_list[0]
-
-            if node.type == 'endl':
-                if len(node.formatting) > 0:
-                    self.add_error('trailing-colon-whitespace', node=node, args=(':',))
-        except IndexError:
-            pass
-
-    def on_while(self, node):
-        if len(node.second_formatting) > 0:
-            self.add_error('leading-colon-whitespace', node=node, args=(':',))
-
-        # TODO: What if it's a one-liner?
-        try:
-            node = node.value.node_list[0]
-
-            if node.type == 'endl':
-                if len(node.formatting) > 0:
-                    self.add_error('trailing-colon-whitespace', node=node, args=(':',))
-        except IndexError:
-            pass
-
-    def on_format(self, node):
-        pass
-
-    def on_dictitem(self, node):
-        if len(node.first_formatting) > 0:
-            self.add_error('leading-colon-whitespace', node=node, args=(':',))
+            leading = node.whitespace_after_name.value
+            if leading != '':
+                self.add_error('extra-leading-colon-whitespace', node=node, args=(':',))
 
         try:
-            formatting = node.second_formatting[0]
+            trailing = node.body.header.whitespace.value
+            # If we have a comment, the spaces "belong" to the comment
+            # TODO: link to comments's checker
+            if not node.body.header.comment and trailing != '':
+                self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+        except AttributeError:  # We don't have a IndentedBlock: we're in a one-liner
+            trailing = node.body.leading_whitespace.value
+            if trailing.startswith('  '):
+                self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+            elif trailing != ' ':
+                self.add_error('missing-trailing-colon-whitespace', node=node, args=(':',))
 
-            if formatting.value.startswith('  '):
-                self.add_error('trailing-colon-whitespace', node=node, args=(':',))
-            elif formatting.value != ' ':
-                self.add_error('missing-colon-whitespace', node=node, args=(':',))
-        except IndexError:
-            self.add_error('missing-colon-whitespace', node=node, args=(':',))
+    def visit_FunctionDef(self, node):
+        leading = node.whitespace_before_colon.value
+        if leading != '':
+            self.add_error('extra-leading-colon-whitespace', node=node, args=(':',))
 
-    # TODO: finish this shit
-    def on_slice(self, node):
-        spaces = []
-        for index, prefix in enumerate(['first', 'second', 'third', 'fourth']):
-            node_formatting = getattr(node, f"{prefix}_formatting")
-            if len(node_formatting) > 0:
-                spaces.append(index)
+        try:
+            trailing = node.body.header.whitespace.value
+            # If we have a comment, the spaces "belong" to the comment
+            # TODO: link to comments's checker
+            if not node.body.header.comment and trailing != '':
+                self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+        except AttributeError:  # We don't have a IndentedBlock: we're in a one-liner
+            trailing = node.body.leading_whitespace.value
+            if trailing.startswith('  '):
+                self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+            elif trailing != ' ':
+                self.add_error('missing-trailing-colon-whitespace', node=node, args=(':',))
 
-        if len(spaces) != 4:
-            for index in spaces:
-                if index % 2:
-                    self.add_error('trailing-colon-whitespace', node=node, args=(':',))
-                else:
-                    self.add_error('leading-colon-whitespace', node=node, args=(':',))
+    def visit_Lambda(self, node):
+        # With parameters
+        if node.params.params:
+            leading = node.params.params[-1].whitespace_after_param.value
+            if leading != '':
+                self.add_error('extra-leading-colon-whitespace', node=node, args=(':',))
+        else:
+            leading = node.colon.whitespace_before.value
+            if leading != '':
+                self.add_error('extra-leading-colon-whitespace', node=node, args=(':',))
+
+        trailing = node.colon.whitespace_after.value
+        if trailing.startswith('  '):
+            self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+        elif trailing != ' ':
+            self.add_error('missing-trailing-colon-whitespace', node=node, args=(':',))
+
+    # Handles both if and elif keywords
+    def visit_If(self, node):
+        leading = node.whitespace_after_test.value
+        if leading != '':
+            self.add_error('extra-leading-colon-whitespace', node=node, args=(':',))
+
+        try:
+            trailing = node.body.header.whitespace.value
+            # If we have a comment, the spaces "belong" to the comment
+            # TODO: link to comments's checker
+            if not node.body.header.comment and trailing != '':
+                self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+        except AttributeError:  # We don't have a IndentedBlock: we're in a one-liner
+            trailing = node.body.leading_whitespace.value
+            if trailing.startswith('  '):
+                self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+            elif trailing != ' ':
+                self.add_error('missing-trailing-colon-whitespace', node=node, args=(':',))
+
+    def visit_Else(self, node):
+        leading = node.whitespace_before_colon.value
+        if leading != '':
+            self.add_error('extra-leading-colon-whitespace', node=node, args=(':',))
+
+        try:
+            trailing = node.body.header.whitespace.value
+            # If we have a comment, the spaces "belong" to the comment
+            # TODO: link to comments's checker
+            if not node.body.header.comment and trailing != '':
+                self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+        except AttributeError:  # We don't have a IndentedBlock: we're in a one-liner
+            trailing = node.body.leading_whitespace.value
+            if trailing.startswith('  '):
+                self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+            elif trailing != ' ':
+                self.add_error('missing-trailing-colon-whitespace', node=node, args=(':',))
+
+    def visit_With(self, node):
+        leading = node.whitespace_before_colon.value
+        if leading != '':
+            self.add_error('extra-leading-colon-whitespace', node=node, args=(':',))
+
+        try:
+            trailing = node.body.header.whitespace.value
+            # If we have a comment, the spaces "belong" to the comment
+            # TODO: link to comments's checker
+            if not node.body.header.comment and trailing != '':
+                self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+        except AttributeError:  # We don't have a IndentedBlock: we're in a one-liner
+            trailing = node.body.leading_whitespace.value
+            if trailing.startswith('  '):
+                self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+            elif trailing != ' ':
+                self.add_error('missing-trailing-colon-whitespace', node=node, args=(':',))
+
+    def visit_Try(self, node):
+        leading = node.whitespace_before_colon.value
+        if leading != '':
+            self.add_error('extra-leading-colon-whitespace', node=node, args=(':',))
+
+        try:
+            trailing = node.body.header.whitespace.value
+            # If we have a comment, the spaces "belong" to the comment
+            # TODO: link to comments's checker
+            if not node.body.header.comment and trailing != '':
+                self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+        except AttributeError:  # We don't have a IndentedBlock: we're in a one-liner
+            trailing = node.body.leading_whitespace.value
+            if trailing.startswith('  '):
+                self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+            elif trailing != ' ':
+                self.add_error('missing-trailing-colon-whitespace', node=node, args=(':',))
+
+    def visit_ExceptHandler(self, node):
+        leading = node.whitespace_before_colon.value
+        if leading != '':
+            self.add_error('extra-leading-colon-whitespace', node=node, args=(':',))
+
+        try:
+            trailing = node.body.header.whitespace.value
+            # If we have a comment, the spaces "belong" to the comment
+            # TODO: link to comments's checker
+            if not node.body.header.comment and trailing != '':
+                self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+        except AttributeError:  # We don't have a IndentedBlock: we're in a one-liner
+            trailing = node.body.leading_whitespace.value
+            if trailing.startswith('  '):
+                self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+            elif trailing != ' ':
+                self.add_error('missing-trailing-colon-whitespace', node=node, args=(':',))
+
+    def visit_Finally(self, node):
+        leading = node.whitespace_before_colon.value
+        if leading != '':
+            self.add_error('extra-leading-colon-whitespace', node=node, args=(':',))
+
+        try:
+            trailing = node.body.header.whitespace.value
+            # If we have a comment, the spaces "belong" to the comment
+            # TODO: link to comments's checker
+            if not node.body.header.comment and trailing != '':
+                self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+        except AttributeError:  # We don't have a IndentedBlock: we're in a one-liner
+            trailing = node.body.leading_whitespace.value
+            if trailing.startswith('  '):
+                self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+            elif trailing != ' ':
+                self.add_error('missing-trailing-colon-whitespace', node=node, args=(':',))
+
+    def visit_For(self, node):
+        leading = node.whitespace_before_colon.value
+        if leading != '':
+            self.add_error('extra-leading-colon-whitespace', node=node, args=(':',))
+
+        try:
+            trailing = node.body.header.whitespace.value
+            # If we have a comment, the spaces "belong" to the comment
+            # TODO: link to comments's checker
+            if not node.body.header.comment and trailing != '':
+                self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+        except AttributeError:  # We don't have a IndentedBlock: we're in a one-liner
+            trailing = node.body.leading_whitespace.value
+            if trailing.startswith('  '):
+                self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+            elif trailing != ' ':
+                self.add_error('missing-trailing-colon-whitespace', node=node, args=(':',))
+
+    def visit_While(self, node):
+        leading = node.whitespace_before_colon.value
+        if leading != '':
+            self.add_error('extra-leading-colon-whitespace', node=node, args=(':',))
+
+        try:
+            trailing = node.body.header.whitespace.value
+            # If we have a comment, the spaces "belong" to the comment
+            # TODO: link to comments's checker
+            if not node.body.header.comment and trailing != '':
+                self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+        except AttributeError:  # We don't have a IndentedBlock: we're in a one-liner
+            trailing = node.body.leading_whitespace.value
+            if trailing.startswith('  '):
+                self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+            elif trailing != ' ':
+                self.add_error('missing-trailing-colon-whitespace', node=node, args=(':',))
+
+    def visit_DictElement(self, node):
+        leading = node.whitespace_before_colon.value
+        if leading != '':
+            self.add_error('extra-leading-colon-whitespace', node=node, args=(':',))
+
+        trailing = node.whitespace_after_colon.value
+        if trailing.startswith('  '):
+            self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+        elif trailing != ' ':
+            self.add_error('missing-trailing-colon-whitespace', node=node, args=(':',))
+
+    # TODO: should we follow: https://www.python.org/dev/peps/pep-0008/#whitespace-in-expressions-and-statements ?
+    def visit_Slice(self, node):
+        first_colon = node.first_colon
+        if first_colon.whitespace_before.value != '':
+            self.add_error('extra-leading-colon-whitespace', node=node, args=(':',))
+        if first_colon.whitespace_after.value != '':
+            self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))
+
+        second_colon = node.second_colon
+        if isinstance(second_colon, Colon):
+            if second_colon.whitespace_before.value != '':
+                self.add_error('extra-leading-colon-whitespace', node=node, args=(':',))
+            if second_colon.whitespace_after.value != '':
+                self.add_error('extra-trailing-colon-whitespace', node=node, args=(':',))

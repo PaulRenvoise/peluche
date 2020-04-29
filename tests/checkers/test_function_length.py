@@ -32,7 +32,40 @@ def related_subreddits(self, related_subreddits):
         multi.delete()
 
 
-def find_by_name(cls, names, stale=False, _update = False):
+def user_subreddits(cls, user, ids=True, limit=DEFAULT_LIMIT):
+    """
+    subreddits that appear in a user's listings. If the user has
+    subscribed, returns the stored set of subscriptions.
+    limit - if it's Subreddit.DEFAULT_LIMIT, limits to 50 subs
+            (100 for gold users)
+            if it's None, no limit is used
+            if it's an integer, then that many subs will be returned
+    Otherwise, return the default set.
+    """
+    # Limit the number of subs returned based on user status,
+    # if no explicit limit was passed
+    if limit is Subreddit.DEFAULT_LIMIT:
+        if user and user.gold:
+            # Goldies get extra subreddits
+            limit = Subreddit.gold_limit
+        else:
+            limit = Subreddit.sr_limit
+
+    # note: for user not logged in, the fake user account has
+    # has_subscribed == False by default.
+    if user and user.has_subscribed:
+        sr_ids = Subreddit.subscribed_ids_by_user(user)
+        sr_ids = cls.random_reddits(user.name, sr_ids, limit)
+
+        return sr_ids if ids else Subreddit._byID(sr_ids,
+                                                  data=True,
+                                                  return_dict=False,
+                                                  stale=True)
+    else:
+        return cls.default_subreddits(ids=ids)
+
+
+def find_by_name(cls, names, stale=False, _update = False):  # function-too-long
     '''
     Usages:
     1. Subreddit.find_by_name('funny') # single sr name

@@ -10,3 +10,5 @@ class cls_name():  # invalid-class-name
 class clsName():  # invalid-class-name
     pass
 
+class x:  # invalid-class-name
+    pass

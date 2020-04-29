@@ -1,4 +1,4 @@
-import re
+import regex
 
 from .base import BaseChecker
 
@@ -26,15 +26,15 @@ class ClassNaming(BaseChecker):
     }
 
     CRE_FORMATS = {
-        'snake_case': re.compile(r"^[a-z\d_]+$"),
-        'camel_case': re.compile(r"^[a-z][a-zA-Z\d]+$"),
-        'pascal_case': re.compile(r"^[A-Z][a-zA-Z\d]+$"),
-        'upper_case': re.compile(r"^[A-Z\d_]+$"),
+        'snake_case': regex.compile(r"^[a-z\d_]+$"),
+        'camel_case': regex.compile(r"^[a-z][a-zA-Z\d]+$"),
+        'pascal_case': regex.compile(r"^[A-Z][a-zA-Z\d]+$"),
+        'upper_case': regex.compile(r"^[A-Z\d_]+$"),
     }
 
     def __init__(self):
         super().__init__()
 
-    def on_class(self, node):
-        if not re.match(self.CRE_FORMATS['pascal_case'], node.name):
-            self.add_error('invalid-class-name', node=node, args=(node.name, 'pascal_case',))
+    def visit_ClassDef(self, node):
+        if not self.CRE_FORMATS['pascal_case'].match(node.name.value):
+            self.add_error('invalid-class-name', node=node.name, args=(node.name.value, 'pascal_case',))

@@ -1,5 +1,5 @@
 # AST Parsing
-redbaron==0.9.2
+libcst==0.3.4
 
 # Caching
 diskcache==4.1.0

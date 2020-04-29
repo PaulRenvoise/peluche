@@ -11,8 +11,14 @@ lst = ['b', 'c', 'd']
 if 'a' in lst:
     pass
 
-if 1 in [1, 2, 3]:
+if 1 in [1, 2, 3]:  # faster-membership-testing
     pass
 
-if True not in (True, False):
+if 1 not in [2, 3]:  # faster-membership-testing
+    pass
+
+if 'a' in ('a', 'b', 'c'):  # faster-membership-testing
+    pass
+
+if 'a' not in ('b', 'c'):  # faster-membership-testing
     pass

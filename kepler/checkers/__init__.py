@@ -1,6 +1,3 @@
-# We import all checkers from all subdirs
-# because they define the __all__ dunder var
-
 from .base import BaseChecker
 
 from .operator_spacing import OperatorSpacing
@@ -27,12 +24,11 @@ from .membership_testing_refactoring import MembershipTestingRefactoring
 from .class_naming import ClassNaming
 from .function_naming import FunctionNaming
 
-from .not_in_ordering import NotInOrdering
+from .not_in_refactoring import NotInRefactoring
 
 from .class_docstring import ClassDocstring
 from .function_docstring import FunctionDocstring
 
-# from .function_newlines import FunctionNewlines
 from .decorator_newlines import DecoratorNewlines
 
 
@@ -54,9 +50,8 @@ __all__ = (
     'MembershipTestingRefactoring',
     'ClassNaming',
     'FunctionNaming',
-    'NotInOrdering',
+    'NotInRefactoring',
     'ClassDocstring',
     'FunctionDocstring',
-#    'FunctionNewlines',
     'DecoratorNewlines',
 )

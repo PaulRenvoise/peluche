@@ -49,8 +49,8 @@ class LineLength(BaseChecker):
     def __init__(self):
         super().__init__()
 
-    def on_module(self, node):
-        raw = node.dumps()
+    def visit_Module(self, node):
+        raw = node.code
 
         for index, line in enumerate(raw.split('\n'), start=1):
             if not line:
@@ -58,4 +58,4 @@ class LineLength(BaseChecker):
 
             line_len = len(line)
             if line_len > 120:
-                self.add_error('line-too-long', node=node.at(index), args=(line_len, 120))
+                self.add_error('line-too-long', position=(index, 0), args=(line_len, 120))

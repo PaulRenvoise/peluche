@@ -1,3 +1,5 @@
+from libcst import Param
+
 from .base import BaseChecker
 
 
@@ -20,6 +22,14 @@ class FunctionParametersCount(BaseChecker):
             'help': """
                 Whether or not to ignore keyword arguments.
             """
+        },
+        'ignore-stars': {
+            'default': False,
+            'type': 'bool',
+            'metavar': 'TRUE or FALSE',
+            'help': """
+                Whether or not to ignore starred arguments.
+            """
         }
     }
     MESSAGES = {
@@ -33,10 +43,23 @@ class FunctionParametersCount(BaseChecker):
     def __init__(self):
         super().__init__()
 
-    def on_def(self, node):
-        parameters = node.find_all('def_argument')
-        if False:
-            parameters = [parameter for parameter in parameters if parameter.value is None]
+    def visit_FunctionDef(self, node):
+        parameters = node.params.params
+        parameters += node.params.posonly_params
+
+        if False:  # ignore-kwargs=False
+            parameters = [parameter for parameter in parameters if parameter.default is None]
+        else:
+            parameters += node.params.kwonly_params
+
+        if not False:  # ignore-stars=False
+            star_arg = node.params.star_arg
+            if isinstance(star_arg, Param):
+                parameters += (star_arg,)
+
+            star_kwarg = node.params.star_kwarg
+            if isinstance(star_kwarg, Param):
+                parameters += (star_kwarg,)
 
         count = len(parameters)
 

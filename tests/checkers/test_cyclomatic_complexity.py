@@ -2,7 +2,12 @@ def is_quarantined(self):
     pass
 
 
-def related_subreddits(self):
+def is_limited_moderator(self, user):
+    rel = self.is_moderator(user)
+    return bool(rel and not rel.is_superuser())
+
+
+def get_related_subreddits(self):
     try:
         multi = LabeledMulti._byID(self._related_multipath)
     except tdb_cassandra.NotFound:
@@ -10,7 +15,83 @@ def related_subreddits(self):
     return  [sr.name for sr in multi.srs] if multi else []
 
 
-def related_subreddits(self, related_subreddits):
+@classmethod
+def default_subreddits(cls, ids=True):
+    """Return the subreddits a user with no subscriptions would see."""
+    location = get_user_location()
+    srids = LocalizedDefaultSubreddits.get_defaults(location)
+
+    srs = Subreddit._byID(srids, data=True, return_dict=False, stale=True)
+    srs = filter(lambda sr: sr.allow_top, srs)
+
+    if ids:
+        return [sr._id for sr in srs]
+    else:
+        return srs
+
+def can_submit(self, user, promotion=False):
+    if c.user_is_admin:
+        return True
+    elif self.is_banned(user) and not promotion:
+        return False
+    elif self.spammy():
+        return False
+    elif self.type == 'public':
+        return True
+    elif self.is_moderator(user) or self.is_contributor(user):
+        #restricted/private require contributorship
+        return True
+    elif self.type == 'gold_only':
+        return user.gold or user.gold_charter
+    elif self.type == 'gold_restricted' and user.gold:
+        return True
+    elif self.type == 'restricted' and promotion:
+        return True
+    else:
+        return False
+
+
+def can_edit(self, user):
+    if isinstance(user, FakeAccount):
+        return False
+
+    # subreddit multireddit (admin can edit)
+    if isinstance(self.owner, Subreddit):
+        return (c.user_is_admin or
+                self.owner.is_moderator_with_perms(user, 'config'))
+
+    if c.user_is_admin and self.owner == Account.system_user():
+        return True
+
+    return user == self.owner
+
+
+@classmethod
+def lookup(cls, keys, update=False):
+    def _lookup(keys):
+        rows = cls._cf.multiget(keys)
+        ret = {}
+        for key in keys:
+            columns = rows[key] if key in rows else {}
+            id36s = columns.keys()
+            ret[key] = id36s
+        return ret
+
+    id36s_by_location = sgm(
+        cache=g.gencache,
+        keys=keys,
+        miss_fn=_lookup,
+        prefix=cls.CACHE_PREFIX,
+        stale=True,
+        _update=update,
+        ignore_set_errors=True,
+    )
+    ids_by_location = {location: [int(id36, 36) for id36 in id36s]
+                       for location, id36s in id36s_by_location.iteritems()}
+    return ids_by_location
+
+
+def set_related_subreddits(self, related_subreddits):
     try:
         multi = LabeledMulti._byID(self._related_multipath)
     except tdb_cassandra.NotFound:
@@ -30,6 +111,28 @@ def related_subreddits(self, related_subreddits):
         multi._commit()
     else:
         multi.delete()
+
+    def record_visitor_activity(self, context, visitor_id):
+        """Record a visit to this subreddit in the activity service.
+        This is used to show "here now" numbers. Multiple contexts allow us
+        to bucket different kinds of visitors (logged-in vs. logged-out etc.)
+        :param str context: The category of visitor. Must be one of
+            Subreddit.activity_contexts.
+        :param str visitor_id: A unique identifier for this visitor within the
+            given context.
+        """
+        assert context in self.activity_contexts
+
+        # we don't actually support other contexts yet
+        assert self.activity_contexts == ("logged_in",)
+
+        if not c.activity_service:
+            return
+
+        try:
+            c.activity_service.record_activity(self._fullname, visitor_id)
+        except (TApplicationException, TProtocolException, TTransportException):
+            pass
 
 
 def find_by_name(cls, names, stale=False, _update = False):

@@ -1,3 +1,7 @@
+from libcst import EmptyLine
+from libcst.metadata import PositionProvider, ParentNodeProvider
+from libcst.matchers import findall, FunctionDef, Comment
+
 from .base import BaseChecker
 
 
@@ -21,7 +25,7 @@ class FunctionLength(BaseChecker):
                 Whether or not to ignore docstrings.
             """
         },
-        'ignore-comments': {  # TODO
+        'ignore-comments': {
             'default': True,
             'type': 'bool',
             'metavar': 'TRUE or FALSE',
@@ -43,14 +47,30 @@ class FunctionLength(BaseChecker):
     def __init__(self):
         super().__init__()
 
-    def on_def(self, node):
-        length = node.absolute_length - 1  # Minus one for the function's signature
+    # TODO: align on docstring style and take it in account here
+    # when counting the docstring delimiters' size
+    def visit_FunctionDef(self, node):
+        position = self.get_metadata(PositionProvider, node)
+        length = position.length - 1  # Minus one for the function's signature
 
         if True:
-            docstring = node.value.find('string')
+            docstring = node.get_docstring()
+            if docstring is not None:
+                length -= len(docstring.splitlines()) + 2 # Docstring delimiters
 
-            if docstring is not None and docstring.parent == node:
-                length -= docstring.absolute_length
+            # We might have nested functions that are documented...
+            nested_functions = findall(node, FunctionDef())
+            for nested_function in nested_functions:
+                docstring = nested_function.get_docstring()
+                if docstring is not None:
+                    length -= len(docstring.splitlines()) + 2 # Docstring delimiters
+
+        if True:
+            comments = findall(node, Comment())
+            for comment in comments:
+                parent_node = self.get_metadata(ParentNodeProvider, comment)
+                if isinstance(parent_node, EmptyLine):  # The comment is not inline
+                    length -= 1  # One comment = one line
 
         if length > 25:
             self.add_error('function-too-long', node=node, args=(length, 25))

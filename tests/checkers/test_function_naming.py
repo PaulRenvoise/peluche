@@ -9,3 +9,6 @@ def funcName():  # invalid-function-name
 
 def FuncName():  # invalid-function-name
     pass
+
+def X():  # invalid-function-name
+    pass

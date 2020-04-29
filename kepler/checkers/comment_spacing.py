@@ -1,4 +1,6 @@
 import re
+from libcst.metadata import ParentNodeProvider
+from libcst import EmptyLine, TrailingWhitespace, Module
 
 from .base import BaseChecker
 
@@ -8,18 +10,23 @@ class CommentSpacing(BaseChecker):
     DESCRIPTION = 'Checks the compliance with spacing rules before comments.'
     OPTIONS = {}
     MESSAGES = {
-        'missing-comment-whitespace': {
-            'template': "Missing whitespace around {!r}.",
+        'missing-leading-comment-whitespace': {
+            'template': "Missing whitespace before {!r}.",
             'description': """
             """,
         },
-        'leading-comment-whitespace': {
-            'template': "Extraneous leading whitespace before {!r}.",
+        'missing-trailing-comment-whitespace': {
+            'template': "Missing whitespace after {!r}.",
             'description': """
             """,
         },
-        'trailing-comment-whitespace': {
-            'template': "Extraneous trailing whitespace after {!r}.",
+        'extra-leading-comment-whitespace': {
+            'template': "Extraneous whitespace before {!r}.",
+            'description': """
+            """,
+        },
+        'extra-trailing-comment-whitespace': {
+            'template': "Extraneous whitespace after {!r}.",
             'description': """
             """,
         },
@@ -28,79 +35,24 @@ class CommentSpacing(BaseChecker):
     def __init__(self):
         super().__init__()
 
-    def on_class(self, node):
-        comment_node = node.sixth_formatting.comment
-        if comment_node is None:
-            return
-
-        supposed_space_node = node.sixth_formatting[0]
-        if supposed_space_node == comment_node:
-            self.add_error('missing-comment-whitespace', node=comment_node, args=('#',))
-        elif supposed_space_node.value.startswith('   '):
-            self.add_error('leading-comment-whitespace', node=supposed_space_node, args=('#',))
-        elif supposed_space_node.value != '  ':
-            self.add_error('missing-comment-whitespace', node=supposed_space_node, args=('#',))
-        elif re.match(r"#[^\s]", comment_node.value):
-            self.add_error('missing-comment-whitespace', node=comment_node, args=('#',))
-
-    def on_def(self, node):
-        comment_node = node.sixth_formatting.comment
-        if comment_node is None:
-            return
-
-        supposed_space_node = node.sixth_formatting[0]
-        if supposed_space_node == comment_node:
-            self.add_error('missing-comment-whitespace', node=comment_node, args=('#',))
-        elif supposed_space_node.value.startswith('   '):
-            self.add_error('leading-comment-whitespace', node=supposed_space_node, args=('#',))
-        elif supposed_space_node.value != '  ':
-            self.add_error('missing-comment-whitespace', node=supposed_space_node, args=('#',))
-        elif re.match(r"#[^\s]", comment_node.value):
-            self.add_error('missing-comment-whitespace', node=comment_node, args=('#',))
-
-    def on_try(self, node):
-        comment_node = node.second_formatting.comment
-        if comment_node is None:
-            return
-
-        supposed_space_node = node.second_formatting[0]
-        if supposed_space_node == comment_node:
-            self.add_error('missing-comment-whitespace', node=comment_node, args=('#',))
-        elif supposed_space_node.value.startswith('   '):
-            self.add_error('leading-comment-whitespace', node=supposed_space_node, args=('#',))
-        elif supposed_space_node.value != '  ':
-            self.add_error('missing-comment-whitespace', node=supposed_space_node, args=('#',))
-        elif re.match(r"#[^\s]", comment_node.value):
-            self.add_error('missing-comment-whitespace', node=comment_node, args=('#',))
-
-    def on_except(self, node):
-        comment_node = node.fifth_formatting.comment
-        if comment_node is None:
-            return
-
-        supposed_space_node = node.fifth_formatting[0]
-        if supposed_space_node == comment_node:
-            self.add_error('missing-comment-whitespace', node=comment_node, args=('#',))
-        elif supposed_space_node.value.startswith('   '):
-            self.add_error('leading-comment-whitespace', node=supposed_space_node, args=('#',))
-        elif supposed_space_node.value != '  ':
-            self.add_error('missing-comment-whitespace', node=supposed_space_node, args=('#',))
-        elif re.match(r"#[^\s]", comment_node.value):
-            self.add_error('missing-comment-whitespace', node=comment_node, args=('#',))
-
-    def on_comment(self, node):
-        root = node.root
-        if root.at(node.absolute_bounding_box.top_left.line) == node:
-            return
-
-        space_node = node.formatting.space
-
-        if space_node is not None:
-            if space_node.value.startswith('   '):
-                self.add_error('leading-comment-whitespace', node=space_node, args=('#',))
-            elif space_node.value != '  ':
-                self.add_error('missing-comment-whitespace', node=space_node, args=('#',))
-            elif re.match(r"#[^\s]", node.value):
-                self.add_error('missing-comment-whitespace', node=node, args=('#',))
+    def visit_Comment(self, node):
+        parent_node = self.get_metadata(ParentNodeProvider, node)
+        if isinstance(parent_node, EmptyLine):  # The comment is not inline
+            if not parent_node.indent:
+                self.add_error('missing-leading-comment-whitespace', node=node, args=('#',))
+            else:
+                whitespace = parent_node.whitespace.value
+                if whitespace != '':
+                    self.add_error('extra-leading-comment-whitespace', node=node, args=('#',))
         else:
-            self.add_error('missing-comment-whitespace', node=node, args=('#',))
+            whitespace = parent_node.whitespace.value
+            if whitespace.startswith('   '):
+                self.add_error('extra-leading-comment-whitespace', node=node, args=('#',))
+            elif whitespace != '  ':
+                self.add_error('missing-leading-comment-whitespace', node=node, args=('#',))
+
+        comment = node.value
+        if comment.startswith('#  '):
+            self.add_error('extra-trailing-comment-whitespace', node=node, args=('#',))
+        elif comment[:2] != '# ':
+            self.add_error('missing-trailing-comment-whitespace', node=node, args=('#',))

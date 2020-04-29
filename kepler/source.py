@@ -1,8 +1,7 @@
 import os
 import hashlib
 
-import baron
-from redbaron import RedBaron
+import libcst
 
 
 class Source:
@@ -26,41 +25,32 @@ class Source:
         # self.lines_count = len(self.lines)
         # self.lines = [set() for _ in range(self.lines_count)]
 
-        # for comment in self.ast.find_all('comment'):
-        #     if comment.value.startswith('# kepler:disable '):
-        #         self._disable_checkers_with_comment(comment)
-        #     elif comment.value.startswith('# kepler:enable '):
-        #         self._enable_checkers_with_comment(comment)
-        #     else:
-        #         continue
+        # for comment in self.cst.find_all('comment'):
+            # if comment.value.startswith('# kepler:disable '):
+                # self._disable_checkers_with_comment(comment)
+            # elif comment.value.startswith('# kepler:enable '):
+                # self._enable_checkers_with_comment(comment)
+            # else:
+                # continue
 
     @property
-    def ast(self):
+    def cst(self):
         try:
-            return self._ast
+            return self._cst
         except AttributeError:
-            self._ast = self._parse(self.raw)
+            self._cst = self._parse(self.raw)
 
-            return self._ast
-
-    @property
-    def fst(self):
-        try:
-            return self._fst
-        except AttributeError:
-            # Calls `.ast()` that will call `._parse()` if `_ast` is not set
-            self._fst = self.ast.fst()
-
-            return self._fst
+            return self._cst
 
     def _parse(self, raw):
         try:
-            ast = RedBaron(raw)
-        except baron.parser.ParsingError as error:
+            cst = libcst.parse_module(raw)
+            annotated_cst = libcst.MetadataWrapper(cst)
+        except libcst._exceptions.ParserSyntaxError as error:
             # TODO: log something? What's the wanted behavior here?
             raise error
 
-        return ast
+        return annotated_cst
 
     def _disable_checkers_with_comment(comment):
         checkers = set(comment.value[17:].split(', '))

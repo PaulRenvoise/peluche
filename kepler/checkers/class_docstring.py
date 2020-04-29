@@ -16,8 +16,8 @@ class ClassDocstring(BaseChecker):
     def __init__(self):
         super().__init__()
 
-    def on_class(self, node):
-        docstring = node.value.find('string')
+    def visit_ClassDef(self, node):
+        docstring = node.get_docstring()
 
-        if not docstring or docstring.parent is not node:
+        if not docstring or docstring.strip() == '':
             self.add_error('missing-class-docstring', node=node, args=())

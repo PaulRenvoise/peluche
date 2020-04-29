@@ -1,23 +1,52 @@
-@property
+# Functions
+
+@contextmanager
 def func():
-    pass
+    yield 1
 
 
-@property
-@staticmethod
-def func():
-    pass
-
-
-@property
+@contextmanager
 
 def func():
-    pass
+    yield 1
 
 
-@property
+@cached
+@contextmanager
+def func():
+    yield 1
 
-@staticmethod
+
+
+@cached
+
+@contextmanager
 
 def func():
-    pass
+    yield 1
+
+
+# Classes
+
+class Cls():
+    @property
+    def prop(self):
+        return self.prop
+
+    @property
+
+    def attr(self):
+        return self.attr
+
+    @cached
+    @property
+    def slow_prop(self):
+        return self._compute_slow_prop()
+
+    @cached
+
+
+    @property
+
+    def slow_attr(self):
+        return self._compute_slow_attr()

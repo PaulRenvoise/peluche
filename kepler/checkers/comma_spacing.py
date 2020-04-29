@@ -1,3 +1,6 @@
+from libcst import SimpleWhitespace, List, Tuple, Set, Dict, Parameters, Call, ClassDef, MaybeSentinel
+from libcst.metadata import ParentNodeProvider
+
 from .base import BaseChecker
 
 
@@ -6,18 +9,18 @@ class CommaSpacing(BaseChecker):
     DESCRIPTION = 'Checks the compliance with spacing rules around commas.'
     OPTIONS = {}
     MESSAGES = {
-        'missing-comma-whitespace': {
+        'missing-trailing-comma-whitespace': {
             'template': "Missing whitespace after {!r}.",
             'description': """
             """,
         },
-        'leading-comma-whitespace': {
-            'template': "Extraneous leading whitespace before {!r}.",
+        'extra-leading-comma-whitespace': {
+            'template': "Extraneous whitespace before {!r}.",
             'description': """
             """,
         },
-        'trailing-comma-whitespace': {
-            'template': "Extraneous trailing whitespace after {!r}.",
+        'extra-trailing-comma-whitespace': {
+            'template': "Extraneous whitespace after {!r}.",
             'description': """
             """,
         },
@@ -26,19 +29,53 @@ class CommaSpacing(BaseChecker):
     def __init__(self):
         super().__init__()
 
-    def on_comma(self, node):
-        if len(node.first_formatting) > 0:
-            self.add_error('leading-comma-whitespace', node=node, args=(',',))
+    def visit_Comma(self, node):
+        whitespace_before_node = node.whitespace_before
+        leading = whitespace_before_node.value
+        if leading != '':
+            self.add_error('extra-leading-comma-whitespace', node=node, args=(',',))
 
-        try:
-            formatting = node.second_formatting[0]  # Raises IndexError if there is no formatting after the comma
+        whitespace_after_node = node.whitespace_after
+        if isinstance(whitespace_after_node, SimpleWhitespace):
+            trailing = whitespace_after_node.value
+            grandparent_node = self.get_metadata(ParentNodeProvider, self.get_metadata(ParentNodeProvider, node))
 
-            if formatting.type != 'endl':
-                if formatting.value.startswith('  '):
-                    self.add_error('trailing-comma-whitespace', node=node, args=(',',))
-                elif formatting.value != ' ':
-                    self.add_error('missing-comma-whitespace', node=node, args=(',',))
-        except IndexError:
-            # Tuples with one item are usually explicitly set with: `(item,)`
-            if node.parent.type != 'tuple' or len(node.parent.value) > 1:
-                self.add_error('missing-comma-whitespace', node=node, args=(',',))
+            # Tuples with one item require a trailing comma with no whitespace after
+            # All other cases require a space after a comma
+            if isinstance(grandparent_node, Tuple) and len(grandparent_node.elements) == 1:
+                if trailing != '':
+                    self.add_error('extra-trailing-comma-whitespace', node=node, args=(',',))
+                else:
+                    return
+
+            # This block checks for trailing commas, that are ignored because
+            # handled by another checker TODO: link to checker
+            if isinstance(grandparent_node, (Tuple, List, Set, Dict)):
+                if grandparent_node.elements[-1].comma is node:
+                    return
+            elif isinstance(grandparent_node, Parameters):
+                # Build the parameters list, hopefully in the right order
+                parameters = grandparent_node.posonly_params + grandparent_node.params
+                if grandparent_node.star_arg is not MaybeSentinel.DEFAULT:
+                    parameters += (grandparent_node.star_arg,)
+                parameters += grandparent_node.kwonly_params
+                if grandparent_node.star_kwarg is not None:
+                    parameters += (grandparent_node.star_kwarg,)
+
+                if parameters[-1].comma is node:
+                    return
+            elif isinstance(grandparent_node, ClassDef):
+                if grandparent_node.bases[-1].comma is node:
+                    return
+            elif isinstance(grandparent_node, Call):
+                if grandparent_node.args[-1].comma is node:
+                    return
+
+            if trailing.startswith('  '):
+                self.add_error('extra-trailing-comma-whitespace', node=node, args=(',',))
+            elif trailing != ' ':
+                self.add_error('missing-trailing-comma-whitespace', node=node, args=(',',))
+        else:
+            trailing = whitespace_after_node.first_line.whitespace.value
+            if trailing != '':
+                self.add_error('extra-trailing-comma-whitespace', node=node, args=(',',))

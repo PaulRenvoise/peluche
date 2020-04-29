@@ -14,6 +14,22 @@ class Cls(object ):  # KO
     pass
 class Cls( object):  # KO
     pass
+class Cls(
+    object
+):
+    pass
+class Cls(
+    object
+    ):
+    pass
+class Cls( 
+    object
+):
+    pass
+class Cls(
+    object
+ ):
+    pass
 
 # Defs
 
@@ -31,6 +47,30 @@ def func(a ):  # KO
     pass
 def func( a):  # KO
     pass
+def func(
+        a,
+        b,
+        c,
+):
+    pass
+def func(
+        a,
+        b,
+        c,
+        ):
+    pass
+def func( 
+        a,
+        b,
+        c,
+        ):
+    pass
+def func(
+        a,
+        b,
+        c,
+ ):
+    pass
 
 # Calls
 
@@ -41,6 +81,18 @@ func(a)
 func( a )  # KO
 func(a )  # KO
 func( a)  # KO
+func(
+    a
+    )
+func(
+    a
+)
+func( 
+    a
+)
+func(
+ a
+ )
 
 # Tuples
 
@@ -76,3 +128,12 @@ print ('print')  # KO
 ( 'state' + 'ment' )  # KO
 ( 's' * 2)  # KO
 (2 / 1 )  # KO
+(
+    'statement'
+)
+( 
+    'statement'
+)
+(
+    'statement'
+ )

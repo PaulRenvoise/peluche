@@ -1,13 +1,25 @@
-lambda a: a
+lambda: True
 
-lambda a, b, c: a, b, c
+lambda a: True
 
-lambda a=1, b=2, c=3: a, b, c
+lambda a, /, b: True
 
-lambda a, b, c=1: a, b, c
+lambda *args, b: True
 
-lambda a, b, c, d: a, b, c, d  # too-many-lambda-parameters
+lambda a, *args, **kwargs: True
 
-lambda a=1, b=2, c=3, d=4: a, b, c, d  # too-many-lambda-parameters
+lambda a=1, b=2, c=3: True
 
-lambda a, b, c=1, d=2: a, b, c, d  # too-many-lambda-parameters
+lambda a, b, c=1: True
+
+lambda a, b, c, d: True  # too-many-lambda-parameters
+
+lambda a=1, b=2, c=3, d=4: True  # too-many-lambda-parameters
+
+lambda a, b, c=1, d=2: True  # too-many-lambda-parameters
+
+lambda a, b, c, *args, **kwargs: True  # too-many-lambda-parameters
+
+lambda *args, b, c, d: True  # too-many-lambda-parameters
+
+lambda a, b, /, c=1, **kwargs: True  # too-many-lambda-parameters

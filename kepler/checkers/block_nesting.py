@@ -1,3 +1,6 @@
+from libcst import If, While, For, Try, FunctionDef
+from libcst.metadata import ScopeProvider, FunctionScope
+
 from .base import BaseChecker
 
 
@@ -24,27 +27,28 @@ class BlockNesting(BaseChecker):
         },
     }
 
-    NODES = {
-        'def',
-        'if',
-        'while',
-        'for',
-        'try',
-    }
+    NESTABLE_NODES = (
+        FunctionDef,
+        If,
+        While,
+        For,
+        Try,
+    )
 
     def __init__(self):
         super().__init__()
 
-    def on_def(self, node):
+    def visit_FunctionDef(self, node):
+        scope = self.get_metadata(ScopeProvider, node)
         # If we're processing a nested function, we ignore it
         # because we already processed the parent function
-        if getattr(node.scope, 'type', 'root') == 'def':
+        if isinstance(scope, FunctionScope):
             return
 
-        self._compute_nesting(node, 3, -1)
+        self._check_nesting(node, 3, -1)
 
-    def _compute_nesting(self, node, max_nesting, current_nesting):
-        if node.type in self.NODES:
+    def _check_nesting(self, node, max_nesting, current_nesting):
+        if isinstance(node, self.NESTABLE_NODES):
             current_nesting += 1
 
             if current_nesting > max_nesting:
@@ -52,6 +56,6 @@ class BlockNesting(BaseChecker):
                 return True
 
         for child in node.children:
-            found = self._compute_nesting(child, max_nesting, current_nesting)
+            found = self._check_nesting(child, max_nesting, current_nesting)
             if found:
                 break

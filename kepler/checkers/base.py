@@ -1,11 +1,22 @@
+from libcst import CSTVisitor
+from libcst.metadata import PositionProvider, ParentNodeProvider, ScopeProvider
+from libcst.metadata import CodePosition
+
+
 from ..message import Message
 
 
-class BaseChecker():
+class BaseChecker(CSTVisitor):
     NAME = None
     DESCRIPTION = None
     OPTIONS = {}
     MESSAGES = {}
+
+    METADATA_DEPENDENCIES = (
+        PositionProvider,
+        ParentNodeProvider,
+        ScopeProvider,
+    )
 
     def __init__(self):
         self.OPTIONS.update({
@@ -21,10 +32,17 @@ class BaseChecker():
     def name(self):
         return self.NAME
 
-    def add_error(self, error_id, args=None, node=None):
+    def add_error(self, error_id, args=None, node=None, position=None):
+        """
+        TODO
+        """
         content = self.MESSAGES[error_id]['template'].format(*args)
+        if node is not None:
+            position = self.get_metadata(PositionProvider, node).start
+        else:
+            position = CodePosition(*position)
 
-        print(Message(error_id, content, node=node))
+        print(Message(error_id, content, position=position))
 
         return True
 

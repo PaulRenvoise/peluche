@@ -13,7 +13,6 @@ from .checkers import *  # Registers the checkers as subclasses of BaseChecker
 from .finder import Finder
 from .progress import Progress
 from .source import Source
-from .walker import Walker
 
 
 class Kepler:
@@ -85,17 +84,14 @@ class Kepler:
         progress.initialize()
 
         for filepath in progress.monitor(finder.find_files(self.args.paths)):
-            # xp(f)
-
             source = Source(filepath)
-
-            # xp(source.fst)
-
-            walker = Walker(source, checkers, None)
-            walker.walk()
+            xp(source.filename)
+            for checker in checkers:
+                source.cst.visit(checker)
 
         progress.finalize()
 
+    @timeable
     def config(self):
         """
         Dumps the configuration of kepler and it's checkers to the .ini file
@@ -107,17 +103,16 @@ class Kepler:
             - None
         TODO
         """
-        with tracer(f"Dumping config with {self.args}"):
-            configuration = ConfigParser(allow_no_value=True)
+        configuration = ConfigParser(allow_no_value=True)
 
-            configuration.read_dict(self.get_config())
+        configuration.read_dict(self.get_config())
 
-            for checker in BaseChecker.__subclasses__():
-                checker_config = checker().get_config()
+        for checker in BaseChecker.__subclasses__():
+            checker_config = checker().get_config()
 
-                configuration.read_dict(checker_config)
+            configuration.read_dict(checker_config)
 
-            configuration.write(open('kepler.ini', 'w'))
+        configuration.write(open('kepler.ini', 'w'))
 
     def doc(self):
         """

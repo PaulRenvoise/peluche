@@ -15,7 +15,7 @@ class DecoratorNewlines(BaseChecker):
         },
     }
     MESSAGES = {
-        'trailing-decorator-newline': {
+        'extra-trailing-decorator-newline': {
             'template': "Extraneous trailing newline after {!r} decorator.",
             'description': """
                 TODO
@@ -26,18 +26,16 @@ class DecoratorNewlines(BaseChecker):
     def __init__(self):
         super().__init__()
 
-    def on_def(self, node):
+    def visit_FunctionDef(self, node):
         if len(node.decorators) == 0:
             return
 
-        # We MUST have a decorator somewhere, else we won't even reach this part
-        decorator_node = node.decorators[0]
-        for item in node.decorators[1:]:
-            if item.type == 'decorator':
-                decorator_node = item
-                endl_count = 1
-            elif item.type == 'endl':
-                endl_count += 1
+        prev_decorator_node = node.decorators[0]
+        for decorator_node in node.decorators[1:]:
+            if decorator_node.leading_lines:
+                self.add_error('extra-trailing-decorator-newline', node=prev_decorator_node, args=(prev_decorator_node.decorator.value,))
 
-            if endl_count > 1:
-                self.add_error('trailing-decorator-newline', node=decorator_node, args=(decorator_node.dumps(),))
+            prev_decorator_node = decorator_node
+
+        if node.lines_after_decorators:
+            self.add_error('extra-trailing-decorator-newline', node=prev_decorator_node, args=(prev_decorator_node.decorator.value,))
