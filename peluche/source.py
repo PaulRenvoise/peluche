@@ -13,6 +13,7 @@ class Source:
         TODO
         """
         self.filepath = filepath
+        self.relpath = os.path.relpath(filepath)
         self.filename = os.path.split(filepath)[1]
         self.basename, self.extension = os.path.splitext(self.filename)
 
