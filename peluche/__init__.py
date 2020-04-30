@@ -43,22 +43,22 @@ DEFAULT_LOGGING_CONFIG = {
         },
     },
     'loggers': {
-        'kepler.progress.dot': {
+        'peluche.progress.dot': {
             'handlers': ['dot'],
             'level': 'INFO',
             'propagate': False,
         },
-        'kepler.progress.filename': {
+        'peluche.progress.filename': {
             'handlers': ['filename'],
             'level': 'INFO',
             'propagate': False,
         },
-        'kepler.progress.percent': {
+        'peluche.progress.percent': {
             'handlers': ['percent'],
             'level': 'INFO',
             'propagate': False,
         },
-        'kepler.progress.count': {
+        'peluche.progress.count': {
             'handlers': ['percent'],
             'level': 'INFO',
             'propagate': False,
@@ -82,9 +82,9 @@ finally:
 from .monkey import *
 
 from .__pkg__ import __version__
-from .kepler import Kepler
+from .peluche import Peluche
 
 
 __all__ = (
-    'Kepler',
+    'Peluche',
 )

@@ -15,7 +15,7 @@ from .progress import Progress
 from .source import Source
 
 
-class Kepler:
+class Peluche:
     """
     TODO
     """
@@ -96,7 +96,7 @@ class Kepler:
     @timeable
     def config(self):
         """
-        Dumps the configuration of kepler and it's checkers to the .ini file
+        Dumps the configuration of peluche and it's checkers to the .ini file
 
         Args:
             - None
@@ -114,7 +114,7 @@ class Kepler:
 
             configuration.read_dict(checker_config)
 
-        configuration.write(open('kepler.ini', 'w'))
+        configuration.write(open('peluche.ini', 'w'))
 
     def doc(self):
         """
@@ -132,19 +132,19 @@ class Kepler:
         else:
             command.extend(['--html', '--output-dir', self.args.output])
 
-        command.append('kepler')
+        command.append('peluche')
 
         subprocess.run(command)
 
     def get_config(self):
         configuration = dict()
 
-        configuration['kepler'] = {}
+        configuration['peluche'] = {}
 
         for key, value in self.OPTIONS.items():
             if value['help'] != '':
-                configuration['kepler'][f"# {value['help'].strip()}"] = None
+                configuration['peluche'][f"# {value['help'].strip()}"] = None
 
-            configuration['kepler'][key] = value['default']
+            configuration['peluche'][key] = value['default']
 
         return configuration

@@ -4,7 +4,7 @@ import os
 from setuptools import setup
 from setuptools import find_packages
 
-from kepler.__pkg__ import __version__
+from peluche.__pkg__ import __version__
 
 root = os.path.dirname(__file__)
 
@@ -51,10 +51,10 @@ readme = open(os.path.join(root, 'README.md'), 'r').read()
 setup(
     version=__version__,
 
-    name='kepler',
+    name='peluche',
     author='Paul Renvoisé',
     author_email='renvoisepaul@gmail.com',
-    url='https://github.com/PaulRenvoise/kepler',
+    url='https://github.com/PaulRenvoise/peluche',
     description='',
     long_description=readme,
     classifiers=classifiers,

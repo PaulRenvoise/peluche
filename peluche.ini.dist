@@ -1,4 +1,4 @@
-[kepler]
+[peluche]
 # the formatter to use to report the progress.
 formatter = dot
 # whether or not to exit at the first error encountered.
