@@ -1,28 +1,38 @@
-def func():
+def func_0():
     pass
 
 
-def func():
+def func_1():
     pass
 
-def func():  # missing-newlines-before-function
+def func_2():
     pass
 
 
 
-def func():  # extraneous-newlines-before-function
+def func_3():
     pass
 
 
 class Cls():
-    def __init__(self):
+    def meth_0(self):
         pass
 
-    def meth(self):
+    def meth_1(self):
         pass
-    def meth(self):  # missing-newlines-before-function
+    def meth_2(self):
         pass
 
 
-    def meth(self):  # extraneous-newlines-before-function
-        pass
+    def meth_3(self):
+        def nested_func_0():
+            pass
+
+        def nested_func_1():
+            pass
+        def nested_func_2():
+            pass
+
+
+        def nested_func_3():
+            pass
