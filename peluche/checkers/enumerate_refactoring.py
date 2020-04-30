@@ -3,13 +3,13 @@ from libcst.matchers import extract, Call, Name, Integer, Arg, SaveMatchedNode, 
 from .base import BaseChecker
 
 
-class EnumerationRefactoring(BaseChecker):
-    NAME = 'enumeration_refactoring'
+class EnumerateRefactoring(BaseChecker):
+    NAME = 'enumerate_refactoring'
     DESCRIPTION = 'Checks for refactoring of non-optimized enumerations.'
     OPTIONS = {}
     MESSAGES = {
-        'faster-enumeration': {
-            'template': "Replace call to {!r} by 'enumerate({})' as it is .9x faster.",
+        'range-enumerate': {
+            'template': "Replace call to {!r} by 'enumerate({})'.",
             'description': """
             """,
         },
@@ -55,4 +55,4 @@ class EnumerationRefactoring(BaseChecker):
         match = extract(node.iter, self.MATCHER)
         if match:
             arg_node = match['call'].args[0].value
-            self.add_error('faster-enumeration', node=node.iter, args=(node.iter.code, arg_node.code))
+            self.add_error('range-enumerate', node=node.iter, args=(node.iter.code, arg_node.code))

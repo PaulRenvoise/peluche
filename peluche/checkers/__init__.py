@@ -18,7 +18,7 @@ from .cyclomatic_complexity import CyclomaticComplexity
 
 from .block_nesting import BlockNesting
 
-from .enumeration_refactoring import EnumerationRefactoring
+from .enumerate_refactoring import EnumerateRefactoring
 from .membership_testing_refactoring import MembershipTestingRefactoring
 from .not_in_refactoring import NotInRefactoring
 from .min_max_refactoring import MinMaxRefactoring
@@ -53,7 +53,7 @@ __all__ = (
 
     'BlockNesting',
 
-    'EnumerationRefactoring',
+    'EnumerateRefactoring',
     'MembershipTestingRefactoring',
     'NotInRefactoring',
     'MinMaxRefactoring',
