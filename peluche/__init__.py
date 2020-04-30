@@ -23,7 +23,7 @@ DEFAULT_LOGGING_CONFIG = {
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
-            'formatter': 'console',
+            'formatter': 'no_info',
             'level': 'DEBUG',
         },
         'dot': {
