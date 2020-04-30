@@ -21,6 +21,7 @@ from .block_nesting import BlockNesting
 from .enumeration_refactoring import EnumerationRefactoring
 from .membership_testing_refactoring import MembershipTestingRefactoring
 from .not_in_refactoring import NotInRefactoring
+from .min_max_refactoring import MinMaxRefactoring
 
 from .file_naming import FileNaming
 from .class_naming import ClassNaming
@@ -54,6 +55,7 @@ __all__ = (
     'EnumerationRefactoring',
     'MembershipTestingRefactoring',
     'NotInRefactoring',
+    'MinMaxRefactoring',
 
     'FileNaming',
     'ClassNaming',
