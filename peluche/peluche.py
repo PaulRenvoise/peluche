@@ -3,6 +3,7 @@ import logging
 import subprocess
 import time
 
+from collections import defaultdict
 from configparser import ConfigParser
 
 from flashback import timeable
@@ -80,23 +81,33 @@ class Peluche:
 
         finder = Finder()
 
+        errors = defaultdict(list)
+
         progress = Progress(style=self.args.formatter)
         progress.initialize()
 
         for filepath in progress.monitor(finder.find_files(self.args.paths)):
             source = Source(filepath)
-            xp(source.filename)
             for checker in checkers:
-                checker.source = source
+                checker.prepare(source)
 
                 source.cst.visit(checker)
 
+                errors[source.relpath].extend(checker.errors)
+
         progress.finalize()
+
+        for relpath, messages in errors.items():
+            for message in messages:
+                logging.info(f"{relpath}:{message}")
+
+        errors_count = len([value for values in errors.values() for value in values])
+        logging.debug("Found %i lint error%s", errors_count, 's' if errors_count > 1 else '')
 
     @timeable
     def config(self):
         """
-        Dumps the configuration of peluche and it's checkers to the .ini file
+        Dumps the configuration of peluche and its checkers to the .ini file
 
         Args:
             - None

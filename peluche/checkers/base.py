@@ -2,7 +2,6 @@ from libcst import CSTVisitor
 from libcst.metadata import PositionProvider, ParentNodeProvider, ScopeProvider
 from libcst.metadata import CodePosition
 
-
 from ..message import Message
 
 
@@ -32,9 +31,15 @@ class BaseChecker(CSTVisitor):
         # some way else (maybe with something like Rails' CurrentAttribute?)
         self.source = None
 
+        self.errors = []
+
     @property
     def name(self):
         return self.NAME
+
+    def prepare(self, source):
+        self.errors = []
+        self.source = source
 
     def add_error(self, error_id, args=None, node=None, position=None):
         """
@@ -46,9 +51,8 @@ class BaseChecker(CSTVisitor):
         else:
             position = CodePosition(*position)
 
-        print(Message(error_id, content, position=position))
-
-        return True
+        message = Message(error_id, content, position=position)
+        self.errors.append(message)
 
     def get_config(self):
         configuration = dict()

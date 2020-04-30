@@ -10,7 +10,6 @@ class Finder:
     """
     TODO
     """
-    @timeable
     def find_files(self, paths):
         """
         Orchestrates the search, normalization, deduplication, and filtering of files from a list of paths
@@ -29,7 +28,7 @@ class Finder:
         files = self._expand_paths_to_files(cleaned_paths)
         filtered_files = self._filter_files(files)
 
-        logging.debug("  Found %i matching files!", len(filtered_files))
+        logging.debug("Found %i matching files!", len(filtered_files))
 
         return filtered_files
 
@@ -48,8 +47,6 @@ class Finder:
             for rhs in sorted_paths[index:]:
                 if rhs.startswith(lhs) and rhs in non_nested_paths:
                     non_nested_paths.remove(rhs)
-
-        logging.debug("  Discarded %i nested paths", len(paths) - len(non_nested_paths))
 
         return non_nested_paths
 
