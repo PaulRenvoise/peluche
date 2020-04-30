@@ -26,9 +26,9 @@ class Source:
         # self.lines = [set() for _ in range(self.lines_count)]
 
         # for comment in self.cst.find_all('comment'):
-            # if comment.value.startswith('# kepler:disable '):
+            # if comment.value.startswith('# peluche:disable '):
                 # self._disable_checkers_with_comment(comment)
-            # elif comment.value.startswith('# kepler:enable '):
+            # elif comment.value.startswith('# peluche:enable '):
                 # self._enable_checkers_with_comment(comment)
             # else:
                 # continue

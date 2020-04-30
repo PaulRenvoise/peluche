@@ -6,18 +6,18 @@ import argparse
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 
-import kepler
+import peluche
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(prog='kepler')
-    parser.add_argument('-v', '--version', action='version', version=kepler.__version__)
+    parser = argparse.ArgumentParser(prog='peluche')
+    parser.add_argument('-v', '--version', action='version', version=peluche.__version__)
 
     subparsers = parser.add_subparsers(title='Commands', dest='command')
 
     analyze_parser = subparsers.add_parser('analyze')
     analyze_parser.add_argument('paths', action='store', nargs='*', metavar='PATHS', type=str, default='.', help='')
-    analyze_parser.add_argument('--config', action='store', metavar='PATH', type=str, default='kepler.ini', help='')
+    analyze_parser.add_argument('--config', action='store', metavar='PATH', type=str, default='peluche.ini', help='')
     analyze_parser.add_argument('--strict', action='store_true', default=False, help='')
     analyze_parser.add_argument('--formatter', action='store', metavar='FORMAT', type=str, default='dot', help='')
     analyze_parser.add_argument('--processes', action='store', metavar='COUNT', type=int, default=1, help='')
@@ -37,6 +37,6 @@ if __name__ == '__main__':
     if args.command is None:
         args = parser.parse_args(['analyze'])
 
-    k = kepler.Kepler(args)
+    k = peluche.Peluche(args)
     command = getattr(k, args.command)
     command()
