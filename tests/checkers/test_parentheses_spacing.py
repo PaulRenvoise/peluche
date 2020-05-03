@@ -2,30 +2,50 @@
 
 class Cls():
     pass
+
 class Cls( ):  # KO
     pass
+
 class Cls ():  # KO
     pass
+
 class Cls(object):
     pass
+
 class Cls( object ):  # KO
     pass
+
 class Cls(object ):  # KO
     pass
+
 class Cls( object):  # KO
     pass
+
 class Cls(
     object
 ):
     pass
+
+class Cls(
+    object  # comment
+):
+    pass
+
 class Cls(
     object
     ):
     pass
+
+class Cls (
+    object
+):
+    pass
+
 class Cls( 
     object
 ):
     pass
+
 class Cls(
     object
  ):
@@ -35,40 +55,58 @@ class Cls(
 
 def func():
     pass
+
 def func( ):  # KO
     pass
+
 def func ():  # KO
     pass
-def func(a):
+
+def func(a, b):
     pass
-def func( a ):  # KO
+
+def func( a, b ):  # KO
     pass
-def func(a ):  # KO
+
+def func(a, b ):  # KO
     pass
-def func( a):  # KO
+
+def func( a, b):  # KO
     pass
+
 def func(
         a,
-        b,
-        c,
+        b
 ):
     pass
+
 def func(
         a,
-        b,
-        c,
+        b  # comment
+):
+    pass
+
+def func(
+        a,
+        b
         ):
     pass
+
+def func (
+        a,
+        b
+):
+    pass
+
 def func( 
         a,
-        b,
-        c,
-        ):
+        b
+):
     pass
+
 def func(
         a,
-        b,
-        c,
+        b
  ):
     pass
 
@@ -77,21 +115,29 @@ def func(
 func()
 func( )  # KO
 func ()  # KO
-func(a)
-func( a )  # KO
-func(a )  # KO
-func( a)  # KO
+func(a, b)
+func( a, b )  # KO
+func(a, b )  # KO
+func( a, b)  # KO
 func(
-    a
-    )
+    a,
+    b
+)
 func(
-    a
+    a,
+    b  # comment
+)
+func (
+    a,
+    b
 )
 func( 
-    a
+    a,
+    b
 )
 func(
- a
+    a,
+    b
  )
 
 # Tuples
@@ -131,9 +177,15 @@ print ('print')  # KO
 (
     'statement'
 )
+(
+    'statement'  # comment
+)
 ( 
     'statement'
 )
 (
     'statement'
  )
+(
+    'statement'
+) 

@@ -70,3 +70,10 @@ func(a,)
 {'set','set' , 'set' ,'set',  'set'}  # KO
 {'dict': 1, 'dict': 1, 'dict': 1, 'dict': 1, 'dict': 1}
 {'dict': 1,'dict': 1 , 'dict': 1 ,'dict': 1,  'dict': 1}  # KO
+
+# Misc
+
+lst = (
+    (r"([iay])nges$", r"\1nx", None),  # should not fail
+    (r"ises$", "is", "is-ises")
+)
