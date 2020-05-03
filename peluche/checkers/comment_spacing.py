@@ -25,11 +25,6 @@ class CommentSpacing(BaseChecker):
             'description': """
             """,
         },
-        'extra-trailing-comment-whitespace': {
-            'template': "Extraneous whitespace after {!r}.",
-            'description': """
-            """,
-        },
     }
 
     def __init__(self):
@@ -52,7 +47,7 @@ class CommentSpacing(BaseChecker):
                 self.add_error('missing-leading-comment-whitespace', node=node, args=('#',))
 
         comment = node.value
-        if comment.startswith('#  '):
-            self.add_error('extra-trailing-comment-whitespace', node=node, args=('#',))
+        if comment == '#':  # probably a newline, ignore
+            return
         elif comment[:2] != '# ':
             self.add_error('missing-trailing-comment-whitespace', node=node, args=('#',))

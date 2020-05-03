@@ -8,8 +8,6 @@ class Cls():   # KO
     pass
 class Cls():  #KO
     pass
-class Cls():  #  KO
-    pass
 
 # Functions, methods, lambdas
 
@@ -21,8 +19,6 @@ def func():   # KO
     pass
 def func():  #KO
     pass
-def func():  #  KO
-    pass
 
 # Default
 
@@ -30,7 +26,6 @@ var = 1  # OK
 var = 2 # KO
 var = 3   # KO
 var = 4  #KO
-var = 5  #  KO
 
 # Try/excepts
 
@@ -84,7 +79,6 @@ lst = [
 # OK
   # KO
 #KO
-#  KO
 class Cls():
     # OK
         # KO
