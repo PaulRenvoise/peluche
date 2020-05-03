@@ -1,5 +1,6 @@
 from .base import BaseChecker
 
+from .bracket_spacing import BracketSpacing
 from .operator_spacing import OperatorSpacing
 from .colon_spacing import ColonSpacing
 from .comma_spacing import CommaSpacing
@@ -35,6 +36,7 @@ from .function_newlines import FunctionNewlines
 
 
 __all__ = (
+    'BracketSpacing',
     'OperatorSpacing',
     'ColonSpacing',
     'CommaSpacing',
