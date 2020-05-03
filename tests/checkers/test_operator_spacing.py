@@ -1,14 +1,20 @@
 # Assignments
 
 var = 1
+var =\
+1
+var = \
+1
+func(a=1)
+var += 1
+
 var=1  # KO
 var =1  # KO
 var= 1  # KO
 var  = 1  # KO
 var =  1  # KO
-func(a=1)
-
-var += 1
+var =  \
+1  # KO
 var+=1  # KO
 var -=1  # KO
 var  *= 1  # KO

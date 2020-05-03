@@ -1,5 +1,6 @@
-from libcst import ClassDef, ExceptHandler, SimpleWhitespace
-from libcst.metadata import ParentNodeProvider
+from libcst import SimpleWhitespace
+from libcst.matchers import findall, MatchMetadataIfTrue, RightSquareBracket
+from libcst.metadata import PositionProvider, ParentNodeProvider
 
 from .base import BaseChecker
 
@@ -48,3 +49,25 @@ class BracketSpacing(BaseChecker):
             leading = whitespace_before_node.first_line.whitespace.value
             if leading != '':
                 self.add_error('extra-leading-bracket-whitespace', node=node, args=(']',))
+
+    # We prefer to check if a TrailingWhitespace follows a RightSquareBracket
+    # rather than check if a RightSquareBracket is followed by a TrailingWhiteSpace
+    # because a TrailingWhitespace tends to appear less often than a RightSquareBracket in code
+    def visit_TrailingWhitespace(self, node):
+        if node.comment is not None:
+            return
+        if node.whitespace.value == '':
+            return
+
+        position = self.get_metadata(PositionProvider, node)
+        parent_node = self.get_metadata(ParentNodeProvider, node)
+
+        matcher = RightSquareBracket(
+            metadata=MatchMetadataIfTrue(
+                PositionProvider,
+                lambda p: position.start.line == p.start.line and position.start.column == p.end.column
+            )
+        )
+        matches = findall(parent_node, matcher, metadata_resolver=self)
+        if matches:
+            self.add_error('extra-trailing-bracket-whitespace', node=matches[0], args=(']',))
