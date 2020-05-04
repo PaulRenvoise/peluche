@@ -34,6 +34,7 @@ from .function_docstring import FunctionDocstring
 
 from .decorator_newlines import DecoratorNewlines
 from .function_newlines import FunctionNewlines
+from .module_newlines import ModuleNewlines
 
 
 __all__ = (
@@ -71,4 +72,5 @@ __all__ = (
 
     'DecoratorNewlines',
     'FunctionNewlines',
+    'ModuleNewlines',
 )

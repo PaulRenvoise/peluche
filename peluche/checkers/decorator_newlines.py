@@ -16,7 +16,7 @@ class DecoratorNewlines(BaseChecker):
     }
     MESSAGES = {
         'extra-trailing-decorator-newline': {
-            'template': "Extraneous trailing newline after {!r} decorator.",
+            'template': "Extraneous newline after {!r} decorator.",
             'description': """
                 TODO
             """,
