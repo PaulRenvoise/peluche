@@ -36,20 +36,25 @@ class FunctionNewlines(BaseChecker):
         super().__init__()
 
     def visit_FunctionDef(self, node):
-        end_line = len(self.source.lines)
-        position = self.get_metadata(PositionProvider, node)
-        if position.end.line == end_line:
-            return
-
-        parent_node = self.get_metadata(ParentNodeProvider, node)
-
         scope = self.get_metadata(ScopeProvider, node)
         if isinstance(scope, (FunctionScope, ClassScope)):
             offset = 1
         elif isinstance(scope, GlobalScope):
             offset = 2
 
+        parent_node = self.get_metadata(ParentNodeProvider, node)
+        parent_position = self.get_metadata(PositionProvider, parent_node)
+        position = self.get_metadata(PositionProvider, node)
+        # A module is actually counted as one line longer than it is,
+        # so we use offset to take that in account
+        # This gives us '+ 0' for functions and classes
+        # and '+ 1' for modules
+        if position.end.line + (offset - 1) == parent_position.end.line:
+            return
+
+        # Finds true empty lines (no comments) following the function
         matcher = EmptyLine(
+            comment=None,
             metadata=MatchMetadataIfTrue(
                 PositionProvider,
                 lambda p: position.end.line < p.start.line <= position.end.line + offset + 1

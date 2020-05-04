@@ -1,5 +1,5 @@
 from libcst import If, While, For, Try, FunctionDef
-from libcst.metadata import ScopeProvider, FunctionScope
+from libcst.metadata import ScopeProvider, FunctionScope, ParentNodeProvider
 
 from .base import BaseChecker
 
@@ -48,7 +48,7 @@ class BlockNesting(BaseChecker):
         self._check_nesting(node, 3, -1)
 
     def _check_nesting(self, node, max_nesting, current_nesting):
-        if isinstance(node, self.NESTABLE_NODES):
+        if isinstance(node, self.NESTABLE_NODES) and not self._is_elif(node):
             current_nesting += 1
 
             if current_nesting > max_nesting:
@@ -59,3 +59,11 @@ class BlockNesting(BaseChecker):
             found = self._check_nesting(child, max_nesting, current_nesting)
             if found:
                 break
+
+    def _is_elif(self, node):
+        if not isinstance(node, If):
+            return False
+
+        parent_node = self.get_metadata(ParentNodeProvider, node)
+        if isinstance(parent_node, If) and parent_node.orelse == node:
+            return True

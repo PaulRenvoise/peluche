@@ -29,3 +29,28 @@ def func():
                             yield i, j
                         except Exception:
                             pass
+
+def func():
+    if True:
+        pass
+    elif True:
+        pass
+    elif True:
+        pass
+    elif True:
+        pass
+    elif True:
+        pass
+    else:
+        pass
+
+def func():
+    if var == 1:
+        pass
+    elif var == 2:
+        pass
+    elif var == 3:
+        if should_iterate:
+            for i in range(2):
+                if i % 2:  # block-too-nested
+                    print(i)

@@ -98,7 +98,8 @@ class Peluche:
         progress.finalize()
 
         for relpath, messages in errors.items():
-            for message in messages:
+            sorted_messages = sorted(messages, key=lambda x: (x.line, x.column))
+            for message in sorted_messages:
                 logging.info(f"{relpath}:{message}")
 
         errors_count = len([value for values in errors.values() for value in values])
@@ -126,26 +127,6 @@ class Peluche:
             configuration.read_dict(checker_config)
 
         configuration.write(open('peluche.ini', 'w'))
-
-    def doc(self):
-        """
-        TODO
-        """
-        logging.debug("DOC with %s\n", self.args)
-
-        command = ['pdoc']
-
-        if self.args.force:
-            command.append('--force')
-
-        if self.args.live:
-            command.extend(['--http', f"{self.args.host}:{self.args.port}"])
-        else:
-            command.extend(['--html', '--output-dir', self.args.output])
-
-        command.append('peluche')
-
-        subprocess.run(command)
 
     def get_config(self):
         configuration = dict()

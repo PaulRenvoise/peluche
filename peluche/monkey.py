@@ -13,9 +13,9 @@ def code(self):
     return ''.join(state.tokens)
 
 
-CSTNode.code = property(code)
-
 def length(self):
     return self.end.line - self.start.line + 1
 
+
+CSTNode.code = property(code)
 CodeRange.length = property(length)

@@ -6,10 +6,6 @@ class Cls(): # KO
     pass
 class Cls():   # KO
     pass
-class Cls():  #KO
-    pass
-class Cls():  #  KO
-    pass
 
 # Functions, methods, lambdas
 
@@ -19,32 +15,18 @@ def func(): # KO
     pass
 def func():   # KO
     pass
-def func():  #KO
-    pass
-def func():  #  KO
-    pass
 
 # Default
 
 var = 1  # OK
 var = 2 # KO
 var = 3   # KO
-var = 4  #KO
-var = 5  #  KO
 
 # Try/excepts
 
-try:  # KO
+try:  # OK
     pass
-except:  # KO
-    pass
-try:#KO
-    pass
-except:#KO
-    pass
-try:  #KO
-    pass
-except:  #KO
+except:  # OK
     pass
 try:# KO
     pass
@@ -55,7 +37,7 @@ try:   # KO
 except:   # KO
     pass
 
-# Comments
+# Inline comments
 
 comment.string[1:].strip()  # OK for an # embedded comment
 
@@ -81,23 +63,77 @@ lst = [
     3,
 ]
 
-# OK
+# Not inline comments
+
   # KO
-#KO
-#  KO
+# OK
 class Cls():
-    # OK
         # KO
   # KO
 # KO
+    # OK
     def __init__(self):
-        # OK
-# KO
                 # KO
     # KO
+# KO
+        # OK
         if True:
-            # OK
                  # KO
         # KO
 # KO
+            # OK
             return True
+
+lst = [
+    # OK
+    [
+        1,
+        2,
+        3
+    ],
+# KO
+    [
+        'a',
+        'b',
+        'c'
+    ],
+  # KO
+    [
+        1.0,
+        2.0,
+        3.0
+    ]
+        # KO
+    [
+        '!',
+        '@',
+        '#'
+    ]
+]
+
+def func(a, b):
+    c = 0
+
+        # KO
+  # KO
+# KO
+    # OK
+    for j in range(i):
+            # KO
+    # KO
+# KO
+        # OK
+        if i == j:
+            if i != 0:
+                c += a
+
+            # Ok for block above
+    # KO
+# KO
+        # OK
+        if i != j:
+            if i != 0:
+                c += a
+
+    # OK
+    return c

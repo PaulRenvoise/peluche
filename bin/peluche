@@ -25,13 +25,6 @@ if __name__ == '__main__':
     config_parser = subparsers.add_parser('config')
     config_parser.add_argument('--default', action='store_true', help='')
 
-    doc_parser = subparsers.add_parser('doc')
-    doc_parser.add_argument('--live', action='store_true', default=False, help='')
-    doc_parser.add_argument('--host', action='store', metavar='HOST', type=str, default='localhost', help='')
-    doc_parser.add_argument('--port', action='store', metavar='PORT', type=int, default=8080, help='')
-    doc_parser.add_argument('--force', action='store_true', default=True, help='')
-    doc_parser.add_argument('--output', action='store', metavar='PATH', type=str, default='docs/', help='')
-
     args = parser.parse_args()
 
     if args.command is None:

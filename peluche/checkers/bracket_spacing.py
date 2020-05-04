@@ -36,8 +36,11 @@ class BracketSpacing(BaseChecker):
             if whitespace_after_node.value != '':
                 self.add_error('extra-trailing-bracket-whitespace', node=node, args=('[',))
         else:
-            trailing = whitespace_after_node.first_line.whitespace.value
-            if trailing != '':
+            first_line_node = whitespace_after_node.first_line
+            if first_line_node.comment is not None:
+                return
+
+            if first_line_node.whitespace.value != '':
                 self.add_error('extra-trailing-bracket-whitespace', node=node, args=('[',))
 
     def visit_RightSquareBracket(self, node):
@@ -46,8 +49,11 @@ class BracketSpacing(BaseChecker):
             if whitespace_before_node.value != '':
                 self.add_error('extra-leading-bracket-whitespace', node=node, args=(']',))
         else:
-            leading = whitespace_before_node.first_line.whitespace.value
-            if leading != '':
+            first_line_node = whitespace_before_node.first_line
+            if first_line_node.comment is not None:
+                return
+
+            if first_line_node.whitespace.value != '':
                 self.add_error('extra-leading-bracket-whitespace', node=node, args=(']',))
 
     # We prefer to check if a TrailingWhitespace follows a RightSquareBracket

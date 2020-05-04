@@ -76,6 +76,9 @@ class CommaSpacing(BaseChecker):
             elif trailing != ' ':
                 self.add_error('missing-trailing-comma-whitespace', node=node, args=(',',))
         else:
-            trailing = whitespace_after_node.first_line.whitespace.value
-            if trailing != '':
+            first_line_node = whitespace_after_node.first_line
+            if first_line_node.comment is not None:
+                return
+
+            if first_line_node.whitespace.value != '':
                 self.add_error('extra-trailing-comma-whitespace', node=node, args=(',',))
