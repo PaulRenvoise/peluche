@@ -6,7 +6,7 @@ import time
 from collections import defaultdict
 from configparser import ConfigParser
 
-from flashback import timeable
+from flashback import timed
 
 from .__pkg__ import __version__
 from .checkers import BaseChecker
@@ -72,7 +72,7 @@ class Peluche:
     def version(self):
         print(__version__)
 
-    @timeable
+    @timed
     def analyze(self):
         """
         TODO
@@ -105,7 +105,7 @@ class Peluche:
         errors_count = len([value for values in errors.values() for value in values])
         logging.debug("Found %i lint error%s", errors_count, 's' if errors_count > 1 else '')
 
-    @timeable
+    @timed
     def config(self):
         """
         Dumps the configuration of peluche and its checkers to the .ini file
