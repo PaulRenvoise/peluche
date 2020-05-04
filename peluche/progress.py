@@ -41,8 +41,13 @@ class Progress:
     def _quiet(self, _item, _index, _length):
         pass
 
-    def _dot(self, _item, index, _length):
-        self.logger.info('.' * index)
+    def _dot(self, _item, index, length):
+        self.logger.info('.')
+
+        # Since the logger does not print trailing newlines
+        # We need to add one at the end
+        if index == length:
+            self.logger.info("\n")
 
     def _filename(self, item, _index, _length):
         self.logger.info(item)
@@ -51,6 +56,11 @@ class Progress:
         percent = index * 100 / length
 
         self.logger.info("%i%%", percent)
+        if index == length:
+            self.logger.info("\n")
 
     def _count(self, _item, index, length):
         self.logger.info("%i/%i", index, length)
+
+        if index == length:
+            self.logger.info("\n")

@@ -13,32 +13,29 @@ DEFAULT_LOGGING_CONFIG = {
         'no_info': {
             'format': '%(message)s'
         },
-        'no_info_no_newline': {
-            'format': '\x1b[1A%(message)s'
-        },
-        'no_info_replace': {
-            'format': '\x1b[80D\x1b[1A\x1b[K%(message)s'
-        },
     },
     'handlers': {
         'console': {
-            'class': 'logging.StreamHandler',
+            '()': 'flashback.logging.AffixedStreamHandler',
             'formatter': 'no_info',
             'level': 'DEBUG',
         },
         'dot': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'no_info_no_newline',
+            '()': 'flashback.logging.AffixedStreamHandler',
+            'formatter': 'no_info',
+            'suffix': '',
             'level': 'INFO',
         },
         'filename': {
-            'class': 'logging.StreamHandler',
+            '()': 'flashback.logging.AffixedStreamHandler',
             'formatter': 'no_info',
             'level': 'INFO',
         },
-        'percent': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'no_info_replace',
+        'percent_or_count': {
+            '()': 'flashback.logging.AffixedStreamHandler',
+            'formatter': 'no_info',
+            'prefix': '\x1b[80D\x1b[K',
+            'suffix': '',
             'level': 'INFO',
         },
     },
@@ -54,12 +51,12 @@ DEFAULT_LOGGING_CONFIG = {
             'propagate': False,
         },
         'peluche.progress.percent': {
-            'handlers': ['percent'],
+            'handlers': ['percent_or_count'],
             'level': 'INFO',
             'propagate': False,
         },
         'peluche.progress.count': {
-            'handlers': ['percent'],
+            'handlers': ['percent_or_count'],
             'level': 'INFO',
             'propagate': False,
         }
