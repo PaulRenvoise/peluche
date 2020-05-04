@@ -28,6 +28,7 @@ from .min_max_refactoring import MinMaxRefactoring
 from .file_naming import FileNaming
 from .class_naming import ClassNaming
 from .function_naming import FunctionNaming
+from .parameter_naming import ParameterNaming
 
 from .class_docstring import ClassDocstring
 from .function_docstring import FunctionDocstring
@@ -66,6 +67,7 @@ __all__ = (
     'FileNaming',
     'ClassNaming',
     'FunctionNaming',
+    'ParameterNaming',
 
     'ClassDocstring',
     'FunctionDocstring',
