@@ -10,6 +10,11 @@ class Message:
         """
         TODO
         """
+        self.line = position.line
+        self.column = position.column
+        self.error_id = error_id
+        self.content = content
+
         self.message = f"{position.line}:{position.column} - {error_id}: {content}"
 
     def __repr__(self):

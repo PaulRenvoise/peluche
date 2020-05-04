@@ -98,7 +98,8 @@ class Peluche:
         progress.finalize()
 
         for relpath, messages in errors.items():
-            for message in messages:
+            sorted_messages = sorted(messages, key=lambda x: (x.line, x.column))
+            for message in sorted_messages:
                 logging.info(f"{relpath}:{message}")
 
         errors_count = len([value for values in errors.values() for value in values])
