@@ -25,7 +25,7 @@ class FunctionNewlines(BaseChecker):
             """,
         },
         'extra-trailing-function-newline': {
-            'template': "Extraneous trailing newline after {!r} function.",
+            'template': "Extraneous newline after {!r} function.",
             'description': """
                 TODO
             """,
