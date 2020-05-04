@@ -3,8 +3,6 @@ import glob
 import logging
 from itertools import combinations
 
-from flashback import timeable
-
 
 class Finder:
     """
