@@ -27,12 +27,12 @@ class Source:
         # self.lines = [set() for _ in range(self.lines_count)]
 
         # for comment in self.cst.find_all('comment'):
-            # if comment.value.startswith('# peluche:disable '):
-                # self._disable_checkers_with_comment(comment)
-            # elif comment.value.startswith('# peluche:enable '):
-                # self._enable_checkers_with_comment(comment)
-            # else:
-                # continue
+        #     if comment.value.startswith('# peluche:disable '):
+        #         self._disable_checkers_with_comment(comment)
+        #     elif comment.value.startswith('# peluche:enable '):
+        #         self._enable_checkers_with_comment(comment)
+        #     else:
+        #         continue
 
     @property
     def cst(self):
@@ -53,7 +53,7 @@ class Source:
 
         return annotated_cst
 
-    def _disable_checkers_with_comment(comment):
+    def _disable_checkers_with_comment(self, comment):
         checkers = set(comment.value[17:].split(', '))
         position = comment.absolute_bounding_box.top_left
 
@@ -63,7 +63,7 @@ class Source:
         else:
             self.lines[position.line - 1] |= checkers
 
-    def _enable_checkers_with_comment(comment):
+    def _enable_checkers_with_comment(self, comment):
         checkers = set(comment.value[16:].split(', '))
         position = comment.absolute_bounding_box.top_left
 

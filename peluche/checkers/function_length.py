@@ -56,14 +56,14 @@ class FunctionLength(BaseChecker):
         if True:
             docstring = node.get_docstring()
             if docstring is not None:
-                length -= len(docstring.splitlines()) + 2 # Docstring delimiters
+                length -= len(docstring.splitlines()) + 2  # Docstring delimiters
 
             # We might have nested functions that are documented...
             nested_functions = findall(node, FunctionDef())
             for nested_function in nested_functions:
                 docstring = nested_function.get_docstring()
                 if docstring is not None:
-                    length -= len(docstring.splitlines()) + 2 # Docstring delimiters
+                    length -= len(docstring.splitlines()) + 2  # Docstring delimiters
 
         if True:
             comments = findall(node, Comment())
