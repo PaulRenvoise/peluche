@@ -21,6 +21,10 @@ class Cls():
     def meth_3(self):
         pass
 
+    # comment
+    def meth_4(self):
+        pass
+
 def func_0():
     pass
 
@@ -34,4 +38,9 @@ def func_2():
 
 
 def func_3():
+    pass
+
+
+# comment
+def func_4():
     pass

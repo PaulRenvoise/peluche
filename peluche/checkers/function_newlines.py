@@ -52,7 +52,9 @@ class FunctionNewlines(BaseChecker):
         if position.end.line + (offset - 1) == parent_position.end.line:
             return
 
+        # Finds true empty lines (no comments) following the function
         matcher = EmptyLine(
+            comment=None,
             metadata=MatchMetadataIfTrue(
                 PositionProvider,
                 lambda p: position.end.line < p.start.line <= position.end.line + offset + 1
