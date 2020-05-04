@@ -127,26 +127,6 @@ class Peluche:
 
         configuration.write(open('peluche.ini', 'w'))
 
-    def doc(self):
-        """
-        TODO
-        """
-        logging.debug("DOC with %s\n", self.args)
-
-        command = ['pdoc']
-
-        if self.args.force:
-            command.append('--force')
-
-        if self.args.live:
-            command.extend(['--http', f"{self.args.host}:{self.args.port}"])
-        else:
-            command.extend(['--html', '--output-dir', self.args.output])
-
-        command.append('peluche')
-
-        subprocess.run(command)
-
     def get_config(self):
         configuration = dict()
 
